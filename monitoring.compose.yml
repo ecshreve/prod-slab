@@ -12,6 +12,9 @@ volumes:
     external: true
 
 services:
+  # Prometheus scrapes metrics from the other services in the network and stores
+  # them in a local volume. The config file is defined inline at the bottom of this
+  # compose file.
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -57,6 +60,56 @@ services:
         limits:
           memory: 256m
 
+  # cAdvisor is a container monitoring tool that provides metrics about the
+  # containers and their associated processes.
+  #
+  # TODO
+  # This container is a resource hog and I don't really like having the root
+  # filesystem mounted as a volume. I need to figure out a better way to get
+  # docker / application metrics.
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro 
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    expose:
+      - 8080
+    labels:
+      - traefik.enable=true
+    depends_on:
+      traefik-srv:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+
+  # TODO
+  # See if this instance can be used as a cache for the other services.
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: unless-stopped
+    expose:
+      - 6379
+    labels:
+      - traefik.enable=true
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+
 # Another inline config because it's convenient.
 configs:
   prometheus.yml:
@@ -78,12 +131,12 @@ configs:
             - targets: ["traefik:8081"]
           metrics_path: /metrics
 
-        - job_name: "synology"
+        - job_name: "synology-node-exporter"
           static_configs:
             - targets: ["100.70.146.118:9100"]
           metrics_path: /metrics
 
-        - job_name: "docker"
+        - job_name: "docker-daemon"
           static_configs:
             - targets: ["host.docker.internal:9323"]
           metrics_path: /metrics
