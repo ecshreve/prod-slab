@@ -44,6 +44,8 @@ services:
     configs:
       - source: traefik.toml
         target: /etc/traefik/traefik.toml
+      - source: dynamic.toml
+        target: /etc/traefik/dynamic.toml
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     healthcheck:
@@ -94,3 +96,19 @@ configs:
         endpoint = "unix:///var/run/docker.sock"
         defaultRule = "Host(`{{ .ContainerName }}.ecs.lan`)"
         exposedByDefault = false
+      [providers.file]
+        filename = "/etc/traefik/dynamic.toml"
+
+  dynamic.toml:
+    content: |
+      [http]
+      [http.routers]
+        [http.routers.coder-rtr]
+          entryPoints = ["web"]
+          service = "coder-svc"
+          rule = "Host(`coder.ecs.lan`)"
+
+      [http.services]
+        [http.services.coder-svc.loadBalancer]
+          [[http.services.coder-svc.loadBalancer.servers]]
+            url = "http://mbp:3001"

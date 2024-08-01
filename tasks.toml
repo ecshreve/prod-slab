@@ -3,3 +3,9 @@
     type = "short"
     description = "Deploy all services via compose"
     cmd = "docker-compose up -d"
+
+[[task]]
+    id = "codersvc"
+    type = "long"
+    description = "Run the coder server in the background"
+    cmd = "coder server"
