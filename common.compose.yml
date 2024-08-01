@@ -1,0 +1,6 @@
+---
+networks:
+  default:
+    external: true
+    name: proxy-tsnet
+

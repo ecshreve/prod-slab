@@ -1,0 +1,17 @@
+---
+include:
+  - path: traefik.compose.yml
+  - path: monitoring.compose.yml
+
+services:
+  whoami:
+    image: traefik/whoami
+    container_name: whoami
+    restart: unless-stopped
+    ports:
+      - 80
+    labels:
+      - traefik.enable=true
+    depends_on:
+      traefik-srv:
+        condition: service_healthy

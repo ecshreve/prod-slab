@@ -1,0 +1,5 @@
+[[task]]
+    id = "deployall"
+    type = "short"
+    description = "Deploy all services via compose"
+    cmd = "docker-compose up -d"

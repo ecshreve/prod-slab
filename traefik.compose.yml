@@ -1,0 +1,83 @@
+---
+include:
+  - path: common.compose.yml
+
+volumes:
+  traefik-state:
+
+services:
+  traefik-ts:
+    image: tailscale/tailscale:latest
+    container_name: traefik-ts
+    hostname: traefik
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTH}
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container 
+      - TS_ACCEPT_DNS=true
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+    volumes:
+      - traefik-state:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - sys_module
+
+  traefik-srv:
+    image: traefik:v3.1
+    container_name: traefik-srv
+    network_mode: service:traefik-ts
+    restart: unless-stopped
+    depends_on:
+      - traefik-ts
+    configs:
+      - source: traefik.toml
+        target: /etc/traefik/traefik.toml
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+configs:
+  traefik.toml:
+    content: |
+      [global]
+        checkNewVersion = true
+        sendAnonymousUsage = false
+        [metrics]
+          [metrics.prometheus]
+            addEntryPointsLabels = true
+      [entryPoints]
+        [entryPoints.web]
+          address = ":80"
+          asDefault = true
+          [entryPoints.web.forwardedHeaders]
+            insecure = true
+          [entryPoints.web.proxyProtocol]
+            insecure = true
+        [entryPoints.websecure]
+          address = ":443"
+          [entryPoints.websecure.forwardedHeaders]
+            insecure = true
+          [entryPoints.websecure.proxyProtocol]
+            insecure = true
+        [entryPoints.ssh]
+          address = ":22"
+        [entryPoints.traefik]
+          address = ":8081"
+      [log]
+        format = "json"
+      [accessLog]
+        format = "json"
+      [api]
+        insecure = true
+      [ping]
+        entryPoint = "traefik"
+      [providers.docker]
+        endpoint = "unix:///var/run/docker.sock"
+        defaultRule = "Host(`{{ .ContainerName }}.ecs.lan`)"
+        exposedByDefault = false
