@@ -6,11 +6,29 @@ This repo contains compose files for deploying applications in my homelab.
 
 I'm moving soon and wanted to make sure I had all my ducks in a row for setting up my homelab in the new place. Also was looking for an opportunity to play around with some configuration ideas I've had for some new tools and docker apps that have been scattered across my laptop.
 
-## Applications
+---
 
+#### _apps_
+- [homebox](#homebox)
+- [whoami](#whoami)
+  
+#### _monitoring_
+- [cadvisor](#monitoring-and-metrics)
+- [grafana](#monitoring-and-metrics)
+- [prometheus](#monitoring-and-metrics)
+- redis
+
+#### _routing_
+- [tailscale](#tailscale)
+- [traefik](#traefik)
+
+
+## Apps
 ### Homebox
 
 [Homebox](https://github.com/sysadminsmedia/homebox) is a lightweight self-hosted inventory management type application. I'm using it to keep track of the stuff I'm moving. The image I'm using [`ecshreve/homebox-dev`](https://github.com/ecshreve/homebox-dev) is a fork of a fork of the original project with some tiny changes for my use case.
+
+This is the main app I've been experimenting with, and part of the reason for sprucing up the lab was to make a persistent home for this data.
 
 ### Whoami
 
@@ -18,19 +36,19 @@ A simple container that returns the IP address of the host it's running on. Usef
 
 ## Observability
 
-### Grafana + Prometheus
+### Monitoring and Metrics
 
 [Grafana](https://grafana.com/) is used for visualizing metrics from various services. It is connected to a [Prometheus](https://prometheus.io/) instance that scrapes metrics from hosts and services.
 
 [cAdvisor](https://github.com/google/cadvisor) and [Node Exporter](https://github.com/prometheus/node_exporter) are used to collect metrics from docker containers and hosts, respectively.
 
-<!-- ### Jaeger (todo) -->
+<!-- TODO ### Jaeger -->
 
 ### Logs
 
 Router, firewall, and miscellaneous network logs are sent to the Synology log server.
 
-<!-- todo: application logs -->
+<!-- TODO application logs -->
 
 ## Network
 
@@ -54,5 +72,12 @@ This is a work in progress and is **not** suitable to be exposed to the internet
 
 In my setup I have all of this sitting behind a firewall, my router does not forward any ports, VLANs are set up to separate traffic from hosts in the lab and the rest of my home network, and the docker host only listens on its Tailscale address. There's also logging and alerting in place for unusual network activity, new device connections, etc.
 
+## TODO
 
-
+- [ ] Add Jaeger back in for tracing
+- [ ] Something wonky happening with the tailscale-state volume on down/up, does it need to be persistent? should it just be an ephemeral docker container / tailscale host?
+- [ ] Add backup synology host to tailnet
+- [ ] Backup volumes to vault2
+- [ ] Spin up second backup pihole somewhere? 
+- [ ] Why can't I set up CNAMEs on the ubiquiti controller?
+- [ ] A daily metric snapshot email would be nice
