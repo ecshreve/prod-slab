@@ -1,0 +1,22 @@
+---
+include:
+  - path: traefik.compose.yml
+
+volumes:
+  homebox_data:
+    external: true
+
+services:
+  homebox:
+    image: ecshreve/homebox-dev:latest
+    container_name: homebox
+    restart: unless-stopped
+    expose:
+      - 7745
+    volumes:
+      - homebox_data:/data
+    labels:
+      - "traefik.enable=true"
+    depends_on:
+      traefik-srv:
+        condition: service_healthy

@@ -8,9 +8,13 @@ I'm moving soon and wanted to make sure I had all my ducks in a row for setting 
 
 ## Applications
 
+### Homebox
+
+[Homebox](https://github.com/sysadminsmedia/homebox) is a lightweight self-hosted inventory management type application. I'm using it to keep track of the stuff I'm moving. The image I'm using [`ecshreve/homebox-dev`](https://github.com/ecshreve/homebox-dev) is a fork of a fork of the original project with some tiny changes for my use case.
+
 ### Whoami
 
-A simple container that returns the IP address of the host it's running on. This is the only "application" in the stack at the moment, but it's useful for testing the network setup; and now that the general network structure is in place, and logs and metrics are being collected, I'll start adding more services.
+A simple container that returns the IP address of the host it's running on. Useful for testing routing and load balancing.
 
 ## Observability
 
