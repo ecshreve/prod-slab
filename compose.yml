@@ -3,6 +3,7 @@ include:
   - path: traefik.compose.yml
   - path: monitoring.compose.yml
   - path: homebox.compose.yml
+  - path: gitea.compose.yml
 
 services:
   whoami:

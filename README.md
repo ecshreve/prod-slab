@@ -10,6 +10,7 @@ I'm moving soon and wanted to make sure I had all my ducks in a row for setting 
 
 #### _apps_
 - [homebox](#homebox)
+- [gitea](#gitea)
 - [whoami](#whoami)
   
 #### _monitoring_
@@ -24,11 +25,16 @@ I'm moving soon and wanted to make sure I had all my ducks in a row for setting 
 
 
 ## Apps
+
 ### Homebox
 
 [Homebox](https://github.com/sysadminsmedia/homebox) is a lightweight self-hosted inventory management type application. I'm using it to keep track of the stuff I'm moving. The image I'm using [`ecshreve/homebox-dev`](https://github.com/ecshreve/homebox-dev) is a fork of a fork of the original project with some tiny changes for my use case.
 
 This is the main app I've been experimenting with, and part of the reason for sprucing up the lab was to make a persistent home for this data.
+
+### Gitea
+
+[Gitea](https://gitea.io/en-us/) is a self-hosted git service. I'm using it as a backup mechanism for some of my GitHub repos. Also played around with some git hooks and templating to automatically push to this server when I push to GitHub.
 
 ### Whoami
 
