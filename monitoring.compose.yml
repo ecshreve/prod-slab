@@ -1,7 +1,10 @@
 ---
 include:
-  - path: common.compose.yml
+  - path: traefik.compose.yml
 
+# I'm storing the data for Prometheus and Grafana in named volumes rather than
+# bind mounts because I don't really care about having the metrics forever, and
+# the permissions are easier to manage.
 volumes:
   prometheus_data:
     external: true
@@ -12,6 +15,7 @@ services:
   prometheus:
     image: prom/prometheus
     container_name: prometheus
+    restart: unless-stopped
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     configs:
@@ -20,13 +24,40 @@ services:
     volumes:
       - prometheus_data:/prometheus
     extra_hosts:
-      - "host.docker.internal:host-gateway"
-    ports:
+      - "host.docker.internal:host-gateway" # Needed for cAdvisor host
+    expose:
       - 9090
     labels:
       - traefik.enable=true
-    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+    depends_on:
+      traefik-srv:
+        condition: service_healthy
 
+  # Currently using the standard Node Exporter dashboard and a semi-customized
+  # cAdvisor dashboard. I'm not using the Synology specific dashboards at the moment
+  # because I haven't revisited my SNMP setup since I moved to a new house.
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    restart: unless-stopped
+    volumes:
+      - grafana_data:/var/lib/grafana
+    expose:
+     - 3000
+    labels:
+      - traefik.enable=true
+    depends_on: 
+      - prometheus
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+
+# Another inline config because it's convenient.
 configs:
   prometheus.yml:
     content: |

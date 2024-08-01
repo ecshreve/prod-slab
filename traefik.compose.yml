@@ -1,11 +1,16 @@
 ---
-include:
-  - path: common.compose.yml
+networks:
+  default:
+    external: true
+    name: proxy-tsnet
 
 volumes:
   traefik-state:
 
 services:
+  # Tailscale sidecar for Traefik. This container is responsible for
+  # connecting the Traefik container to the Tailscale network. It allows
+  # traffic from my tailnet to reach the Traefik container.
   traefik-ts:
     image: tailscale/tailscale:latest
     container_name: traefik-ts
@@ -24,6 +29,11 @@ services:
       - net_admin
       - sys_module
 
+  # Traefik container for serving HTTP/(soon HTTPS) traffic. This container 
+  # is configured as a reverse proxy for other services in the network. I have 
+  # CNAME records for each service in my DNS server that point to the
+  # Tailnet IP address of the sidecar container, and those requests are
+  # handled by this service.  
   traefik-srv:
     image: traefik:v3.1
     container_name: traefik-srv
@@ -42,6 +52,9 @@ services:
       timeout: 5s
       retries: 5
 
+# This config is inlined because it's convenient and I deploy
+# this stack to a remote docker host via a docker context. And doing
+# it this way is easier than managing the config file on the remote host.
 configs:
   traefik.toml:
     content: |
