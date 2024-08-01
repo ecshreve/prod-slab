@@ -13,7 +13,7 @@ services:
     image: gitea/gitea:latest
     container_name: gitea
     restart: unless-stopped
-    environment:
+    environment: 
     - GITEA__database__DB_TYPE=mysql
     - GITEA__database__HOST=db:3306
     - GITEA__database__NAME=gitea
@@ -38,7 +38,9 @@ services:
       db:
         condition: service_healthy
       
-
+  # !NOTE The currently deployed instance does not use this MySQL db,
+  # it's using the SQLite db that's stored in the volume. This is
+  # here for future reference.
   db:
     image: mysql:8
     container_name: db
@@ -55,5 +57,5 @@ services:
     healthcheck:
      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
      interval: 10s
-     timeout: 10s
+     timeout: 5s
      retries: 5

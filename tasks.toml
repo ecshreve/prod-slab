@@ -4,8 +4,9 @@
     description = "Deploy all services via compose"
     cmd = "docker-compose up -d"
 
+# TODO: figure out a better way to pass configuration vars into coder.
 [[task]]
     id = "codersvc"
     type = "long"
-    description = "Run the coder server in the background"
+    description = "Run the coder server, configuration in env file"
     cmd = "coder server"
