@@ -53,6 +53,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    labels:
+      - homepage.group=infra
+      - homepage.name=traefik
+      - homepage.icon=traefik-proxy
+      - homepage.href=https://traefik.ecs.lan
+      - homepage.widget.type=traefik
+      - homepage.widget.url=http://traefik:8081
+
 
 # This config is inlined because it's convenient and I deploy
 # this stack to a remote docker host via a docker context. And doing
@@ -70,16 +78,22 @@ configs:
         [entryPoints.web]
           address = ":80"
           asDefault = true
+          # [entryPoints.web.http]
+          #   [entryPoints.web.http.redirections]
+          #     [entryPoints.web.http.redirections.entryPoint]
+          #       to = "websecure"
+          #       scheme = "https"
           [entryPoints.web.forwardedHeaders]
             insecure = true
           [entryPoints.web.proxyProtocol]
             insecure = true
-        [entryPoints.websecure]
-          address = ":443"
-          [entryPoints.websecure.forwardedHeaders]
-            insecure = true
-          [entryPoints.websecure.proxyProtocol]
-            insecure = true
+        # [entryPoints.websecure]
+        #   address = ":443"
+        #   asDefault = true
+        #   [entryPoints.websecure.forwardedHeaders]
+        #     insecure = true
+        #   [entryPoints.websecure.proxyProtocol]
+        #     insecure = true
         [entryPoints.ssh]
           address = ":22"
         [entryPoints.traefik]
@@ -112,3 +126,11 @@ configs:
         [http.services.coder-svc.loadBalancer]
           [[http.services.coder-svc.loadBalancer.servers]]
             url = "http://mbp:3001"
+
+      [http.middlewares]
+        [http.middlewares.custcors.headers]
+          accessControlAllowMethods = ["GET", "OPTIONS", "PUT"]
+          accessControlAllowHeaders = [ "*" ]
+          accessControlAllowOriginList = ["*"]
+          accessControlMaxAge = 100
+          addVaryHeader = true

@@ -9,6 +9,7 @@ I'm moving soon and want to make sure my computer setup was in a good place befo
 ---
 
 ### _Apps_
+- [Homepage](#homepage): Dashboard of all the things
 - [Homebox](#homebox): Track my stuff
 - [Gitea](#gitea): Track my code
 - [Coder](#coder): Track my projects
@@ -25,6 +26,10 @@ I'm moving soon and want to make sure my computer setup was in a good place befo
 - [Traefik](#traefik): Route requests between all the things
 
 ## Apps
+
+### Homepage
+
+[Homepage](https://github.com/gethomepage/homepage) is a dashboard for all the things. I use it to keep track of my services and their status. It also has some bookmarks and widgets for easy access. The configuration is a combinationo of static yaml files and automated discovery via docker labels.
 
 ### Homebox
 
@@ -74,6 +79,8 @@ This setup is a work in progress and is **not** suitable for internet exposure w
 
 ## TODO
 
+- [ ] Add kavita e-reader app
+- [ ] migrate to handling secrets with hashicorp vault.
 - [ ] Add Jaeger back in for tracing
 - [ ] Include pihole in this repo?
 - [ ] Fix the tailscale-state volume issue on down/up
@@ -88,4 +95,4 @@ This setup is a work in progress and is **not** suitable for internet exposure w
 - [ ] Configure workspaces to connect to the tailnet directly
 - [ ] Bake dotfiles into the coder image
 - [ ] Look into automation, auto commit-push if idle with changes for x minutes
-- [ ] move coder templates into this repo
+- [x] move coder templates into this repo

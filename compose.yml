@@ -5,6 +5,10 @@ include:
   - path: homebox.compose.yml
   - path: gitea.compose.yml
 
+volumes:
+  homepage_data:
+    external: true
+
 services:
   whoami:
     image: traefik/whoami
@@ -12,6 +16,23 @@ services:
     restart: unless-stopped
     expose:
       - 80
+    labels:
+      - traefik.enable=true
+    depends_on:
+      traefik-srv:
+        condition: service_healthy
+
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    environment:
+      - TZ=America/Los_Angeles
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - homepage_data:/app/config #TODO bind mount from host for config files
+    expose:
+      - 3000
     labels:
       - traefik.enable=true
     depends_on:

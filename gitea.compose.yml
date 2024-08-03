@@ -32,15 +32,16 @@ services:
       - "traefik.tcp.routers.gitea.entrypoints=ssh"
       - "traefik.tcp.routers.gitea.rule=HostSNI(`*`)"
       - "traefik.tcp.services.gitea.loadbalancer.server.port=22"
+      - "homepage.group=dev"
+      - "homepage.name=gitea"
+      - "homepage.icon=gitea"
+      - "homepage.href=http://gitea.ecs.lan"
     depends_on:
       traefik-srv:
         condition: service_healthy
       db:
         condition: service_healthy
       
-  # !NOTE The currently deployed instance does not use this MySQL db,
-  # it's using the SQLite db that's stored in the volume. This is
-  # here for future reference.
   db:
     image: mysql:8
     container_name: db
@@ -50,12 +51,18 @@ services:
       - MYSQL_USER=gitea
       - MYSQL_PASSWORD=gitea
       - MYSQL_DATABASE=gitea
-    expose:
-      - 3306
+    ports:
+      - 3306:3306
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-     interval: 10s
-     timeout: 5s
-     retries: 5
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - "traefik.enable=true"
+      - "homepage.group=apps"
+      - "homepage.name=mysql"
+      - "homepage.icon=mysql"
+      - "homepage.href=http://db:3306"

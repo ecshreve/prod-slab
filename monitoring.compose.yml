@@ -32,6 +32,10 @@ services:
       - 9090
     labels:
       - traefik.enable=true
+      - homepage.group=metrics
+      - homepage.name=prometheus
+      - homepage.icon=prometheus
+      - homepage.href=http://prometheus.ecs.lan 
     deploy:
       resources:
         limits:
@@ -53,6 +57,10 @@ services:
      - 3000
     labels:
       - traefik.enable=true
+      - homepage.group=metrics
+      - homepage.name=grafana
+      - homepage.icon=grafana
+      - homepage.href=http://grafana.ecs.lan
     depends_on: 
       - prometheus
     deploy:
@@ -80,6 +88,10 @@ services:
       - 8080
     labels:
       - traefik.enable=true
+      - homepage.group=metrics
+      - homepage.name=cAdvisor
+      - homepage.icon=docker
+      - homepage.href=http://cadvisor.ecs.lan
     depends_on:
       traefik-srv:
         condition: service_healthy
@@ -100,6 +112,9 @@ services:
       - 6379
     labels:
       - traefik.enable=true
+      - homepage.group=metrics
+      - homepage.name=redis
+      - homepage.icon=redis
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s

@@ -11,12 +11,18 @@ services:
     image: ecshreve/homebox-dev:latest
     container_name: homebox
     restart: unless-stopped
-    expose:
+    environment:
+      - TZ=America/Los_Angeles
+    ports:
       - 7745
     volumes:
       - homebox_data:/data
     labels:
-      - "traefik.enable=true"
+      - traefik.enable=true
+      - homepage.group=apps
+      - homepage.name=homebox
+      - homepage.icon=homebox
+      - homepage.href=http://homebox.ecs.lan
     depends_on:
       traefik-srv:
         condition: service_healthy
