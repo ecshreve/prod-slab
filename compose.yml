@@ -1,22 +1,100 @@
+# master-compose.yml
 ---
-include:
-  - path: traefik.compose.yml
-  - path: monitoring.compose.yml
-  - path: homebox.compose.yml
-  - path: gitea.compose.yml
-  - path: homepage.compose.yml
+networks:
+  default:
+    external: true
+    name: proxy-tsnet
 
+configs:
+  traefik.toml:
+    file: configs/traefik/traefik.toml
+  dynamic.toml:
+    file: configs/traefik/dynamic.toml
+  docker.yaml:
+   file: configs/homepage/docker.yaml
+  bookmarks.yaml:
+    file: configs/homepage/bookmarks.yaml
+  services.yaml:
+   file: configs/homepage/services.yaml
+  widgets.yaml:
+    file: configs/homepage/widgets.yaml
+
+volumes:
+  ts-state:
+  
 services:
-  whoami:
-    image: traefik/whoami
-    container_name: whoami
-    restart: unless-stopped
-    expose:
-      - 80
-    labels:
-      - traefik.enable=true
+  traefik-ts:
+    extends:
+      file: compose/base/tailscale.compose.yml
+      service: traefik-ts
+
+  traefik:
+    extends:
+      file: compose/base/traefik.compose.yml
+      service: traefik
     depends_on:
-      traefik:
+      traefik-ts:
         condition: service_healthy
 
-  
+  whoami:
+    extends:
+      file: compose/base/whoami.compose.yml
+      service: whoami
+    depends_on:
+      traefik:
+        condition: service_started
+
+  homepage:
+    extends:
+      file: compose/apps/homepage.compose.yml
+      service: homepage
+    depends_on:
+      traefik:
+        condition: service_started
+        
+  # gitea:
+  #   extends:
+  #     file: compose/apps/gitea.compose.yml
+  #     service: gitea
+  #   depends_on:
+  #     traefik:
+  #       condition: service_started
+  #     db:
+  #       condition: service_healthy
+
+  # homebox:
+  #   extends:
+  #     file: compose/apps/homebox.compose.yml
+  #     service: homebox
+  #   depends_on:
+  #     traefik:
+  #       condition: service_started
+
+  # cadvisor:
+  #   extends:
+  #     file: compose/monitoring/cadvisor.compose.yml
+  #     service: cadvisor
+  #   depends_on:
+  #     traefik:
+  #       condition: service_started
+
+  # prometheus:
+  #   extends:
+  #     file: compose/monitoring/prometheus.compose.yml
+  #     service: prometheus
+  #   depends_on:
+  #     traefik:
+  #       condition: service_started
+
+  # grafana:
+  #   extends:
+  #     file: compose/monitoring/grafana.compose.yml
+  #     service: grafana
+  #   depends_on:
+  #     traefik:
+  #       condition: service_started
+
+  # db:
+  #   extends:
+  #     file: compose/apps/gitea.compose.yml
+  #     service: db

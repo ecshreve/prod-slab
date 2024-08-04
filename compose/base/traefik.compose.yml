@@ -1,0 +1,21 @@
+# traefik.compose.yml
+---
+services:
+  traefik:
+    image: traefik:v3.1
+    container_name: traefik
+    network_mode: service:traefik-ts
+    restart: unless-stopped
+    configs:
+      - source: traefik.toml
+        target: /etc/traefik/traefik.toml
+      - source: dynamic.toml
+        target: /etc/traefik/dynamic.toml
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+     

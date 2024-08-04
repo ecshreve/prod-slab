@@ -1,0 +1,32 @@
+[global]
+    checkNewVersion = true
+    sendAnonymousUsage = false
+[metrics]
+    [metrics.prometheus]
+        addEntryPointsLabels = true
+[entryPoints]
+    [entryPoints.web]
+        address = ":80"
+        asDefault = true
+    [entryPoints.web.forwardedHeaders]
+        insecure = true
+    [entryPoints.web.proxyProtocol]
+        insecure = true
+    [entryPoints.ssh]
+        address = ":22"
+    [entryPoints.traefik]
+        address = ":8081"
+[log]
+    format = "json"
+[accessLog]
+    format = "json"
+[api]
+    insecure = true
+[ping]
+    entryPoint = "traefik"
+[providers.docker]
+    endpoint = "unix:///var/run/docker.sock"
+    defaultRule = "Host(`{{ .ContainerName }}.ecs.lan`)"
+    exposedByDefault = false
+[providers.file]
+    filename = "/etc/traefik/dynamic.toml"

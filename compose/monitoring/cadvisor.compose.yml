@@ -1,0 +1,58 @@
+# cadvisor.compose.yml
+---
+
+services:
+  # cAdvisor is a container monitoring tool that provides metrics about the
+  # containers and their associated processes.
+  #
+  # TODO
+  # This container is a resource hog and I don't really like having the root
+  # filesystem mounted as a volume. I need to figure out a better way to get
+  # docker / application metrics.
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro 
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    expose:
+      - 8080
+    labels:
+      - traefik.enable=true
+      - homepage.group=metrics
+      - homepage.name=cadvisor
+      - homepage.icon=docker
+      - homepage.href=http://cadvisor.ecs.lan
+      - homepage.siteMonitor=http://cadvisor.ecs.lan
+      - homepage.showStats=true
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+
+  # TODO
+  # See if this instance can be used as a cache for the other services.
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: unless-stopped
+    expose:
+      - 6379
+    labels:
+      - traefik.enable=true
+      - homepage.group=metrics
+      - homepage.name=redis
+      - homepage.icon=redis
+      - homepage.showStats=true
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256m

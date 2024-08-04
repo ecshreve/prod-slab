@@ -1,0 +1,18 @@
+---
+- devlinks:
+  - Github:
+    - abbr: GH
+      icon: github
+      href: https://github.com/
+  - Cloudflare:
+    - abbr: CF
+      icon: cloudflare
+      href: https://cloudflare.com/
+  - Digital Ocean:
+    - abbr: DO
+      icon: digital-ocean
+      href: https://digitalocean.com/
+  - Hugging Face:
+    - abbr: HF
+      icon: hugging-face
+      href: https://huggingface.co/

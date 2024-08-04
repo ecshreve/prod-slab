@@ -1,0 +1,22 @@
+---
+include:
+  - path: traefik.compose.yml
+  - path: monitoring.compose.yml
+  - path: homebox.compose.yml
+  - path: gitea.compose.yml
+  - path: homepage.compose.yml
+
+services:
+  whoami:
+    image: traefik/whoami
+    container_name: whoami
+    restart: unless-stopped
+    expose:
+      - 80
+    labels:
+      - traefik.enable=true
+    depends_on:
+      traefik:
+        condition: service_healthy
+
+  

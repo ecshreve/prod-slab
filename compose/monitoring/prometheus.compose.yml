@@ -1,0 +1,44 @@
+# prometheus.compose.yml
+---
+configs:
+  prometheus.yml:
+    file: configs/prometheus/prometheus.yml
+    mode: 0644
+
+# I'm storing the data for Prometheus and Grafana in named volumes rather than
+# bind mounts because I don't really care about having the metrics forever, and
+# the permissions are easier to manage.
+volumes:
+  prometheus_data:
+    external: true
+
+services:
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    configs:
+      - source: prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+    volumes:
+      - prometheus_data:/prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # Needed for cAdvisor host
+    expose:
+      - 9090
+    labels:
+      - traefik.enable=true
+      - homepage.group=metrics
+      - homepage.name=prometheus
+      - homepage.icon=prometheus
+      - homepage.href=http://prometheus.ecs.lan
+      - homepage.siteMonitor=http://prometheus.ecs.lan
+      - homepage.widget.type=prometheus
+      - homepage.widget.url=http://prometheus.ecs.lan
+    deploy:
+      resources:
+        limits:
+          memory: 512m
