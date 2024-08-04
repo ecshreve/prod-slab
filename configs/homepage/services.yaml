@@ -1,0 +1,28 @@
+---
+- apps:
+  - coder:
+      href: http://coder.ecs.lan
+      icon: coder
+      siteMonitor: http://coder.ecs.lan
+
+- infra:
+  - unifi:
+      href: http://${UNIFI_CONTROLLER_IP}
+      icon: unifi
+      siteMonitor: https://${UNIFI_CONTROLLER_IP}
+      widget:
+        type: unifi
+        url: https://${UNIFI_CONTROLLER_IP}
+        username: slab
+        password: $UNIFI_PW
+        fields: ["uptime", "lan_users", "wlan_users"]
+
+  - traefik:
+      href: http://traefik.ecs.lan
+      icon: traefik-proxy
+      server: my-docker
+      container: traefik
+      siteMonitor: http://traefik.ecs.lan:8081
+      widget:
+        type: traefik
+        url: http://traefik-ts:8081

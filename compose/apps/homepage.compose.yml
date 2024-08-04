@@ -1,0 +1,26 @@
+# homepage.compose.yml
+---
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    environment:
+      - TZ=America/Los_Angeles
+    # expose:
+    #   - 3000
+    ports:
+      - "8899:3000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    configs:
+      - source: docker.yaml
+        target: /app/config/docker.yaml
+      - source: bookmarks.yaml
+        target: /app/config/bookmarks.yaml
+      - source: services.yaml
+        target: /app/config/services.yaml
+      - source: widgets.yaml
+        target: /app/config/widgets.yaml
+    labels:
+      - traefik.enable=true

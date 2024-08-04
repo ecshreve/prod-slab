@@ -1,0 +1,19 @@
+# whoami.compose.yml
+---
+services:
+  whoami:
+    image: traefik/whoami
+    container_name: whoami
+    restart: unless-stopped
+    expose:
+      - 80
+    labels:
+      - traefik.enable=true
+      - homepage.group=apps
+      - homepage.name=whoami
+      - homepage.icon=question
+      - homepage.href=http://whoami.ecs.lan
+      - homepage.siteMonitor=http://whomai.ecs.lan
+      - homepage.showStats=true
+
+  

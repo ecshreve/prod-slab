@@ -1,13 +1,5 @@
+# gitea.compose.yml
 ---
-include:
-  - path: traefik.compose.yml
-
-volumes:
-  gitea_data:
-    external: true
-  mysql_data:
-    external: true
-    
 services:
   gitea:
     image: gitea/gitea:latest
@@ -67,3 +59,9 @@ services:
       - "homepage.name=mysql"
       - "homepage.icon=mysql"
       - "homepage.showStats=true"
+
+volumes:
+  gitea_data:
+    external: true
+  mysql_data:
+    external: true

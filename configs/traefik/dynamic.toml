@@ -1,0 +1,19 @@
+[http]
+    [http.routers]
+        [http.routers.coder-rtr]
+            entryPoints = ["web"]
+            service = "coder-svc"
+            rule = "Host(`coder.ecs.lan`)"
+
+[http.services]
+    [http.services.coder-svc.loadBalancer]
+        [[http.services.coder-svc.loadBalancer.servers]]
+            url = "http://mbp:3001"
+
+[http.middlewares]
+    [http.middlewares.custcors.headers]
+          accessControlAllowMethods = ["GET", "OPTIONS", "PUT"]
+          accessControlAllowHeaders = [ "*" ]
+          accessControlAllowOriginList = ["*"]
+          accessControlMaxAge = 100
+          addVaryHeader = true

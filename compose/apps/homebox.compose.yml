@@ -1,7 +1,4 @@
 ---
-include:
-  - path: traefik.compose.yml
-
 volumes:
   homebox_data:
     external: true
