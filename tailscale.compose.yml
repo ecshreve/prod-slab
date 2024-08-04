@@ -1,0 +1,27 @@
+---
+networks:
+  default:
+    external: true
+    name: proxy-tsnet
+
+volumes:
+  ts-state: {}
+
+services:
+  traefik-ts:
+    image: tailscale/tailscale:latest
+    container_name: traefik-ts
+    hostname: traefik-ts
+    restart: unless-stopped
+    environment:
+      - TS_AUTHKEY=${TS_AUTH}
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container 
+      - TS_ACCEPT_DNS=true
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+    volumes:
+      - ts-state:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - sys_module

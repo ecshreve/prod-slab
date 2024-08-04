@@ -18,7 +18,6 @@ services:
   prometheus:
     image: prom/prometheus
     container_name: prometheus
-    restart: unless-stopped
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     configs:
@@ -35,13 +34,17 @@ services:
       - homepage.group=metrics
       - homepage.name=prometheus
       - homepage.icon=prometheus
-      - homepage.href=http://prometheus.ecs.lan 
+      - homepage.href=http://prometheus.ecs.lan
+      - homepage.siteMonitor=http://prometheus.ecs.lan
+      - homepage.widget.type=prometheus
+      - homepage.widget.url=http://prometheus.ecs.lan
     deploy:
       resources:
         limits:
           memory: 512m
+    restart: unless-stopped
     depends_on:
-      traefik-srv:
+      traefik:
         condition: service_healthy
 
   # Currently using the standard Node Exporter dashboard and a semi-customized
@@ -61,6 +64,11 @@ services:
       - homepage.name=grafana
       - homepage.icon=grafana
       - homepage.href=http://grafana.ecs.lan
+      - homepage.siteMonitor=http://grafana.ecs.lan
+      - homepage.widget.type=grafana
+      - homepage.widget.url=http://grafana.ecs.lan
+      - homepage.widget.username=admin
+      - homepage.widget.password=admin
     depends_on: 
       - prometheus
     deploy:
@@ -92,8 +100,10 @@ services:
       - homepage.name=cAdvisor
       - homepage.icon=docker
       - homepage.href=http://cadvisor.ecs.lan
+      - homepage.siteMonitor=http://cadvisor.ecs.lan
+      - homepage.showStats=true
     depends_on:
-      traefik-srv:
+      traefik:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -115,6 +125,7 @@ services:
       - homepage.group=metrics
       - homepage.name=redis
       - homepage.icon=redis
+      - homepage.showStats=true
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s

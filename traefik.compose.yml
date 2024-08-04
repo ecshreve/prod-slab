@@ -1,42 +1,16 @@
 ---
-networks:
-  default:
-    external: true
-    name: proxy-tsnet
-
-volumes:
-  traefik-state:
+include:
+  - path: tailscale.compose.yml
 
 services:
-  # Tailscale sidecar for Traefik. This container is responsible for
-  # connecting the Traefik container to the Tailscale network. It allows
-  # traffic from my tailnet to reach the Traefik container.
-  traefik-ts:
-    image: tailscale/tailscale:latest
-    container_name: traefik-ts
-    hostname: traefik
-    restart: unless-stopped
-    environment:
-      - TS_AUTHKEY=${TS_AUTH}
-      - TS_EXTRA_ARGS=--advertise-tags=tag:container 
-      - TS_ACCEPT_DNS=true
-      - TS_STATE_DIR=/var/lib/tailscale
-      - TS_USERSPACE=false
-    volumes:
-      - traefik-state:/var/lib/tailscale
-      - /dev/net/tun:/dev/net/tun
-    cap_add:
-      - net_admin
-      - sys_module
-
   # Traefik container for serving HTTP/(soon HTTPS) traffic. This container 
   # is configured as a reverse proxy for other services in the network. I have 
   # CNAME records for each service in my DNS server that point to the
   # Tailnet IP address of the sidecar container, and those requests are
   # handled by this service.  
-  traefik-srv:
+  traefik:
     image: traefik:v3.1
-    container_name: traefik-srv
+    container_name: traefik
     network_mode: service:traefik-ts
     restart: unless-stopped
     depends_on:
@@ -53,14 +27,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    labels:
-      - homepage.group=infra
-      - homepage.name=traefik
-      - homepage.icon=traefik-proxy
-      - homepage.href=https://traefik.ecs.lan
-      - homepage.widget.type=traefik
-      - homepage.widget.url=http://traefik:8081
-
 
 # This config is inlined because it's convenient and I deploy
 # this stack to a remote docker host via a docker context. And doing
@@ -125,7 +91,7 @@ configs:
       [http.services]
         [http.services.coder-svc.loadBalancer]
           [[http.services.coder-svc.loadBalancer.servers]]
-            url = "http://mbp:3001"
+            url = "http://100.89.167.62:3001"
 
       [http.middlewares]
         [http.middlewares.custcors.headers]

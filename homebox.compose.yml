@@ -23,6 +23,10 @@ services:
       - homepage.name=homebox
       - homepage.icon=homebox
       - homepage.href=http://homebox.ecs.lan
+      - homepage.siteMonitor=http://homebox.ecs.lan
+      # TODO: rebuild the image and fix the timezone value
+      # - homepage.widget.type=homebox
+      # - homepage.widget.url=http://homebox.ecs.lan
     depends_on:
-      traefik-srv:
+      traefik:
         condition: service_healthy

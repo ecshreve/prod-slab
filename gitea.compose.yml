@@ -32,12 +32,13 @@ services:
       - "traefik.tcp.routers.gitea.entrypoints=ssh"
       - "traefik.tcp.routers.gitea.rule=HostSNI(`*`)"
       - "traefik.tcp.services.gitea.loadbalancer.server.port=22"
-      - "homepage.group=dev"
+      - "homepage.group=apps"
       - "homepage.name=gitea"
       - "homepage.icon=gitea"
       - "homepage.href=http://gitea.ecs.lan"
+      - "homepage.showStats=true"
     depends_on:
-      traefik-srv:
+      traefik:
         condition: service_healthy
       db:
         condition: service_healthy
@@ -65,4 +66,4 @@ services:
       - "homepage.group=apps"
       - "homepage.name=mysql"
       - "homepage.icon=mysql"
-      - "homepage.href=http://db:3306"
+      - "homepage.showStats=true"
