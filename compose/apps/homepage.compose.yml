@@ -7,10 +7,8 @@ services:
     restart: unless-stopped
     environment:
       - TZ=America/Los_Angeles
-    # expose:
-    #   - 3000
-    ports:
-      - "8899:3000"
+    expose:
+      - 3000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     configs:

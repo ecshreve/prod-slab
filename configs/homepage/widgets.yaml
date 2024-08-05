@@ -4,3 +4,14 @@
     memory: true
     disk: /
     uptime: true
+
+- unifi_console:
+    url: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
+    username: "{{HOMEPAGE_VAR_UNIFI_LOCAL_USER}}"
+    password: "{{HOMEPAGE_VAR_UNIFI_PW}}"
+
+- datetime:
+    format:
+      dateStyle: short
+      timeStyle: short
+      qhour12: true

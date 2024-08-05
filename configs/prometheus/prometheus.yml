@@ -11,23 +11,22 @@ scrape_configs:
       - targets: ["localhost:9090"]
     metrics_path: /metrics
 
-  # TODO: re-enable these scrapes
-  # - job_name: "traefik"
-  #   static_configs:
-  #     - targets: ["traefik:8081"]
-  #   metrics_path: /metrics
+  - job_name: "traefik"
+    static_configs:
+      - targets: ["traefik-ts:8081"]
+    metrics_path: /metrics
 
-  # - job_name: "synology-node-exporter"
-  #   static_configs:
-  #     - targets: ["vault:9100"]
-  #   metrics_path: /metrics
+  - job_name: "synology-node-exporter"
+    static_configs:
+      - targets: ["host.docker.internal:9100"]
+    metrics_path: /metrics
 
-  # - job_name: "docker-daemon"
-  #   static_configs:
-  #     - targets: ["vault:9323"]
-  #   metrics_path: /metrics
+  - job_name: "docker-daemon"
+    static_configs:
+      - targets: ["host.docker.internal:9323"]
+    metrics_path: /metrics
 
-  # - job_name: "cadvisor"
-  #   static_configs:
-  #     - targets: ["cadvisor:8080"]
-  #   metrics_path: /metrics
+  - job_name: "cadvisor"
+    static_configs:
+      - targets: ["cadvisor:8080"]
+    metrics_path: /metrics

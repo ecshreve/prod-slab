@@ -4,16 +4,19 @@ services:
   whoami:
     image: traefik/whoami
     container_name: whoami
+    hostname: whoami
     restart: unless-stopped
+    environment:
+      - WHOAMI_PORT_NUMBER=88
     expose:
-      - 80
+      - 88
     labels:
       - traefik.enable=true
       - homepage.group=apps
       - homepage.name=whoami
-      - homepage.icon=question
+      - homepage.icon=docker
       - homepage.href=http://whoami.ecs.lan
-      - homepage.siteMonitor=http://whomai.ecs.lan
+      - homepage.siteMonitor=http://whoami:88
       - homepage.showStats=true
 
   

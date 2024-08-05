@@ -1,11 +1,6 @@
 # grafana.compose.yml
 ---
-volumes:
-  grafana_data:
-    external: true
-
 services:
-
   grafana:
     image: grafana/grafana-enterprise
     container_name: grafana

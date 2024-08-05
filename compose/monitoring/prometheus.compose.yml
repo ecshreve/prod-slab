@@ -1,19 +1,6 @@
 # prometheus.compose.yml
 ---
-configs:
-  prometheus.yml:
-    file: configs/prometheus/prometheus.yml
-    mode: 0644
-
-# I'm storing the data for Prometheus and Grafana in named volumes rather than
-# bind mounts because I don't really care about having the metrics forever, and
-# the permissions are easier to manage.
-volumes:
-  prometheus_data:
-    external: true
-
 services:
-
   prometheus:
     image: prom/prometheus
     container_name: prometheus

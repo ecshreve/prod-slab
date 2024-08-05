@@ -1,20 +1,14 @@
 ---
-- apps:
-  - coder:
-      href: http://coder.ecs.lan
-      icon: coder
-      siteMonitor: http://coder.ecs.lan
-
 - infra:
   - unifi:
-      href: http://${UNIFI_CONTROLLER_IP}
+      href: "http://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
       icon: unifi
-      siteMonitor: https://${UNIFI_CONTROLLER_IP}
+      siteMonitor: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
       widget:
         type: unifi
-        url: https://${UNIFI_CONTROLLER_IP}
-        username: slab
-        password: $UNIFI_PW
+        url: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
+        username: "{{HOMEPAGE_VAR_UNIFI_LOCAL_USER}}"
+        password: "{{HOMEPAGE_VAR_UNIFI_PW}}"
         fields: ["uptime", "lan_users", "wlan_users"]
 
   - traefik:
