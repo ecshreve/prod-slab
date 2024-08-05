@@ -16,6 +16,11 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     expose:
       - 8080
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--quiet", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     labels:
       - traefik.enable=true
       - homepage.group=metrics
@@ -23,7 +28,3 @@ services:
       - homepage.icon=docker
       - homepage.href=http://cadvisor.ecs.lan
       - homepage.siteMonitor=http://cadvisor.ecs.lan
-    deploy:
-      resources:
-        limits:
-          memory: 256m

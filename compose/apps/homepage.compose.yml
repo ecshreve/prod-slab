@@ -24,3 +24,7 @@ services:
         target: /app/config/settings.yaml
     labels:
       - traefik.enable=true
+      - homepage.group=apps
+      - homepage.name=homepage
+      - homepage.icon=homepage
+      - homepage.siteMonitor=http://homepage.ecs.lan

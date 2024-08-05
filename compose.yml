@@ -41,11 +41,13 @@ services:
     extends:
       file: compose/base/tailscale.compose.yml
       service: traefik-ts
+    mem_limit: 128m
 
   traefik:
     extends:
       file: compose/base/traefik.compose.yml
       service: traefik
+    mem_limit: 256m
     depends_on:
       traefik-ts:
         condition: service_healthy
@@ -54,6 +56,7 @@ services:
     extends:
       file: compose/base/whoami.compose.yml
       service: whoami
+    mem_limit: 32m
     depends_on:
       traefik:
         condition: service_healthy
@@ -64,9 +67,10 @@ services:
       service: homepage
     env_file:
       - .env
+    mem_limit: 512m
     depends_on:
       traefik:
-        condition: service_healthy
+        condition: service_started
         
   gitea:
     extends:
@@ -74,6 +78,7 @@ services:
       service: gitea
     env_file:
       - .env
+    mem_limit: 512m
     depends_on:
       db:
         condition: service_healthy
@@ -86,24 +91,27 @@ services:
       service: db
     env_file:
       - .env
+    mem_limit: 1024m
     depends_on:
       traefik:
-        condition: service_healthy
+        condition: service_started
   
   adminer:
     extends:
       file: compose/base/mysql.compose.yml
       service: adminer
+    mem_limit: 32m
     depends_on:
       db:
         condition: service_healthy
       traefik:
-        condition: service_healthy
+        condition: service_started
 
   homebox:
     extends:
       file: compose/apps/homebox.compose.yml
       service: homebox
+    mem_limit: 512m
     depends_on:
       traefik:
         condition: service_started

@@ -25,7 +25,3 @@ services:
       - homepage.siteMonitor=http://prometheus.ecs.lan
       - homepage.widget.type=prometheus
       - homepage.widget.url=http://prometheus.ecs.lan
-    deploy:
-      resources:
-        limits:
-          memory: 512m

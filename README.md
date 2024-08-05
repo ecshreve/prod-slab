@@ -10,10 +10,9 @@ I'm moving soon and want to make sure my computer setup was in a good place befo
 
 ### _Apps_
 - [Homepage](#homepage): Dashboard of all the things
-- [Homebox](#homebox): Track my stuff
-- [Gitea](#gitea): Track my code
-- [Coder](#coder): Track my projects
-- [Whoami](#whoami): Debug routing
+- [Homebox](#homebox): Track stuff
+- [Gitea](#gitea): Track code
+- [Coder](#coder): Track dev projects
   
 ### _Monitoring_
 - [cAdvisor](#monitoring-and-metrics): Gather container metrics
@@ -31,21 +30,26 @@ I'm moving soon and want to make sure my computer setup was in a good place befo
 
 [Homepage](https://github.com/gethomepage/homepage) is a dashboard for all the things. I use it to keep track of my services and their status. It also has some bookmarks and widgets for easy access. The configuration is a combinationo of static yaml files and automated discovery via docker labels.
 
+![homepage-screenshot](./images/slab%20homepage.jpeg)
+
 ### Homebox
 
 [Homebox](https://github.com/sysadminsmedia/homebox) is a lightweight self-hosted inventory management app. I started using it to keep track of stuff while I'm moving. Currently running a forked image [`ecshreve/homebox-dev`](https://github.com/ecshreve/homebox-dev) with some tiny tweaks to the UI fixing some cosmetic annoyances.
 
+![homebox-screenshot](./images/homebox.jpeg)
+
 ### Gitea
 
-[Gitea](https://gitea.io/en-us/) is a self-hosted Git service. I use it to back up my GitHub repos and experiment with git hooks and automatic pushes.
+[Gitea](https://gitea.io/en-us/) is a self-hosted Git service. I use it to back up my GitHub repos and experiment with git hooks, templates, etc. This app is backed by a mysql database in another container, accessible directly for troubleshooting via adminer.
+
+![gitea-screenshot](./images/gitea.jpeg)
 
 ### Coder
 
 [Coder](https://coder.com/) is how I manage my development environments. It provides a clean interface to build templates and workspaces. This runs locally on my laptop for now but may move to the NAS.
 
-### Whoami
+![coder-screenshot](./images/coder.jpeg)
 
-A simple container that returns the host's IP address. Useful for testing routing and load balancing. It lives alone in the main compose file for now.
 
 ## Observability
 
@@ -57,8 +61,13 @@ A simple container that returns the host's IP address. Useful for testing routin
 
 #### Dashboards
 
-- [Node Exporter Full](https://grafana.com/grafana/dashboards/1860)
-- [cAdvisor](https://grafana.com/grafana/dashboards/19792) (slightly modified)
+[Node Exporter Full](https://grafana.com/grafana/dashboards/1860)
+
+![grafana-screenshot](./images/docker%20host.jpeg)
+
+[cAdvisor](https://grafana.com/grafana/dashboards/19792) (slightly modified)
+
+![grafana-screenshot2](./images/container%20metrics.png)
 
 ### Logs
 
@@ -87,10 +96,8 @@ This setup is a work in progress and is **not** suitable for internet exposure w
 - [ ] Add kavita e-reader app
 - [ ] migrate to handling secrets with hashicorp vault.
 - [ ] Add Jaeger back in for tracing
-- [ ] Fix the tailscale-state volume issue on down/up
 - [ ] Add backup Synology host to tailnet
 - [ ] Backup volumes to vault2(pick a new hostname for it too)
-- [ ] Resolve CNAME setup issue on Ubiquiti controller
 - [ ] Implement metric snapshot emails
 - [ ] Plan a backup strategy for GitHub -> Gitea
 - [ ] Check on open issue deploying coder via doker on macs
@@ -98,8 +105,12 @@ This setup is a work in progress and is **not** suitable for internet exposure w
 - [ ] Configure workspaces to connect to the tailnet directly
 - [ ] Bake dotfiles into the coder image
 - [ ] Look into automation, auto commit-push if idle with changes for x minutes
-- [x] move coder templates into this repo
+- [ ] move coder templates into this repo
 - [x] Include pihole in this repo?
 - [x] Set up a secondary backup pihole
+    - deprecated the pihole entirely
+- [x] Resolve CNAME setup issue on Ubiquiti controller
+    - moved DNS handling to the synology dns server
+- [x] Fix the tailscale-state volume issue on down/up
 
 
