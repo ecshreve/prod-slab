@@ -20,7 +20,3 @@ services:
       - homepage.widget.url=http://grafana.ecs.lan
       - homepage.widget.username=admin
       - homepage.widget.password=admin
-    deploy:
-      resources:
-        limits:
-          memory: 256m
