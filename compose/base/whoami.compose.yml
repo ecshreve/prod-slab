@@ -17,6 +17,5 @@ services:
       - homepage.icon=docker
       - homepage.href=http://whoami.ecs.lan
       - homepage.siteMonitor=http://whoami:88
-      - homepage.showStats=true
 
   

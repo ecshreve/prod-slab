@@ -1,0 +1,44 @@
+# mysql.compose.yml
+---
+services:
+  db:
+    image: mysql:8
+    container_name: db
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_DATABASE=${DB_NAME}
+    expose:
+      - 3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - traefik.enable=true
+      - homepage.group=infra
+      - homepage.name=mysql
+      - homepage.icon=mysql
+      - homepage.href=http://adminer.ecs.lan/?server=db&db=${DB_NAME}&username=${DB_USER}&password=${DB_PASS}
+      - homepage.ping=http://db:3306
+      - homepage.showStats=true
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: unless-stopped
+    expose:
+      - 8080
+    labels:
+      - traefik.enable=true
+      - homepage.group=apps
+      - homepage.name=adminer
+      - homepage.icon=adminer
+      - homepage.href=http://adminer.ecs.lan
+      - homepage.siteMonitor=http://adminer.ecs.lan
+  
