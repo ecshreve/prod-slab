@@ -1,6 +1,5 @@
 # cadvisor.compose.yml
 ---
-
 services:
   # cAdvisor is a container monitoring tool that provides metrics about the
   # containers and their associated processes.

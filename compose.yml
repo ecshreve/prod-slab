@@ -6,6 +6,8 @@ networks:
     name: proxy-tsnet
 
 configs:
+  prometheus.yml:
+    file: configs/prometheus/prometheus.yml
   traefik.toml:
     file: configs/traefik/traefik.toml
   dynamic.toml:
@@ -21,6 +23,12 @@ configs:
 
 volumes:
   ts-state:
+  prometheus_data:
+    external: true
+  grafana_data:
+    external: true
+  homebox_data:
+    external: true
   
 services:
   traefik-ts:
@@ -42,15 +50,17 @@ services:
       service: whoami
     depends_on:
       traefik:
-        condition: service_started
+        condition: service_healthy
 
   homepage:
     extends:
       file: compose/apps/homepage.compose.yml
       service: homepage
+    env_file:
+      - .env
     depends_on:
       traefik:
-        condition: service_started
+        condition: service_healthy
         
   # gitea:
   #   extends:
@@ -62,37 +72,37 @@ services:
   #     db:
   #       condition: service_healthy
 
-  # homebox:
-  #   extends:
-  #     file: compose/apps/homebox.compose.yml
-  #     service: homebox
-  #   depends_on:
-  #     traefik:
-  #       condition: service_started
+  homebox:
+    extends:
+      file: compose/apps/homebox.compose.yml
+      service: homebox
+    depends_on:
+      traefik:
+        condition: service_started
 
-  # cadvisor:
-  #   extends:
-  #     file: compose/monitoring/cadvisor.compose.yml
-  #     service: cadvisor
-  #   depends_on:
-  #     traefik:
-  #       condition: service_started
+  cadvisor:
+    extends:
+      file: compose/monitoring/cadvisor.compose.yml
+      service: cadvisor
+    depends_on:
+      traefik:
+        condition: service_started
 
-  # prometheus:
-  #   extends:
-  #     file: compose/monitoring/prometheus.compose.yml
-  #     service: prometheus
-  #   depends_on:
-  #     traefik:
-  #       condition: service_started
+  prometheus:
+    extends:
+      file: compose/monitoring/prometheus.compose.yml
+      service: prometheus
+    depends_on:
+      traefik:
+        condition: service_started
 
-  # grafana:
-  #   extends:
-  #     file: compose/monitoring/grafana.compose.yml
-  #     service: grafana
-  #   depends_on:
-  #     traefik:
-  #       condition: service_started
+  grafana:
+    extends:
+      file: compose/monitoring/grafana.compose.yml
+      service: grafana
+    depends_on:
+      traefik:
+        condition: service_started
 
   # db:
   #   extends:
