@@ -20,5 +20,7 @@ services:
         target: /app/config/services.yaml
       - source: widgets.yaml
         target: /app/config/widgets.yaml
+      - source: settings.yaml
+        target: /app/config/settings.yaml
     labels:
       - traefik.enable=true

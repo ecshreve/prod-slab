@@ -6,62 +6,27 @@ services:
     container_name: gitea
     restart: unless-stopped
     environment: 
-    - GITEA__database__DB_TYPE=mysql
-    - GITEA__database__HOST=db:3306
-    - GITEA__database__NAME=gitea
-    - GITEA__database__USER=gitea
-    - GITEA__database__PASSWD=gitea
+      - GITEA__database__DB_TYPE=${DB_TYPE}
+      - GITEA__database__HOST=${DB_HOST}
+      - GITEA__database__NAME=${DB_NAME}
+      - GITEA__database__USER=${DB_USER}
+      - GITEA__database__PASSWD=${DB_PASS}
     volumes:
       - gitea_data:/data
     expose:
       - 3000
       - 22
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.gitea.entrypoints=web"
-      - "traefik.http.routers.gitea.rule=Host(`gitea.ecs.lan`)"
-      - "traefik.http.services.gitea.loadbalancer.server.port=3000"
-      - "traefik.tcp.routers.gitea.entrypoints=ssh"
-      - "traefik.tcp.routers.gitea.rule=HostSNI(`*`)"
-      - "traefik.tcp.services.gitea.loadbalancer.server.port=22"
-      - "homepage.group=apps"
-      - "homepage.name=gitea"
-      - "homepage.icon=gitea"
-      - "homepage.href=http://gitea.ecs.lan"
-      - "homepage.showStats=true"
-    depends_on:
-      traefik:
-        condition: service_healthy
-      db:
-        condition: service_healthy
-      
-  db:
-    image: mysql:8
-    container_name: db
-    restart: unless-stopped
-    environment:
-      - MYSQL_ROOT_PASSWORD=gitea
-      - MYSQL_USER=gitea
-      - MYSQL_PASSWORD=gitea
-      - MYSQL_DATABASE=gitea
-    ports:
-      - 3306:3306
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    labels:
-      - "traefik.enable=true"
-      - "homepage.group=apps"
-      - "homepage.name=mysql"
-      - "homepage.icon=mysql"
-      - "homepage.showStats=true"
-
-volumes:
-  gitea_data:
-    external: true
-  mysql_data:
-    external: true
+      - traefik.enable=true
+      - traefik.http.routers.gitea.entrypoints=web
+      - traefik.http.routers.gitea.rule=Host(`gitea.ecs.lan`)
+      - traefik.http.services.gitea.loadbalancer.server.port=3000
+      - traefik.tcp.routers.gitea.entrypoints=ssh
+      - traefik.tcp.routers.gitea.rule=HostSNI(`*`)
+      - traefik.tcp.services.gitea.loadbalancer.server.port=22
+      - homepage.group=apps
+      - homepage.name=gitea
+      - homepage.icon=gitea
+      - homepage.href=http://gitea.ecs.lan
+      - homepage.siteMonitor=http://gitea.ecs.lan
+      - homepage.showStats=true

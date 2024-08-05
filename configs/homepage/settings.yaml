@@ -1,0 +1,9 @@
+---
+title: "slab homepage"
+
+showStats: false
+
+layout:
+  devlinks:
+    style: row
+    columns: 4

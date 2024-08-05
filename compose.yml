@@ -20,6 +20,8 @@ configs:
    file: configs/homepage/services.yaml
   widgets.yaml:
     file: configs/homepage/widgets.yaml
+  settings.yaml:
+    file: configs/homepage/settings.yaml
 
 volumes:
   ts-state:
@@ -28,6 +30,10 @@ volumes:
   grafana_data:
     external: true
   homebox_data:
+    external: true
+  gitea_data:
+    external: true
+  mysql_data:
     external: true
   
 services:
@@ -62,15 +68,37 @@ services:
       traefik:
         condition: service_healthy
         
-  # gitea:
-  #   extends:
-  #     file: compose/apps/gitea.compose.yml
-  #     service: gitea
-  #   depends_on:
-  #     traefik:
-  #       condition: service_started
-  #     db:
-  #       condition: service_healthy
+  gitea:
+    extends:
+      file: compose/apps/gitea.compose.yml
+      service: gitea
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+
+  db:
+    extends:
+      file: compose/base/mysql.compose.yml
+      service: db
+    env_file:
+      - .env
+    depends_on:
+      traefik:
+        condition: service_healthy
+  
+  adminer:
+    extends:
+      file: compose/base/mysql.compose.yml
+      service: adminer
+    depends_on:
+      db:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
 
   homebox:
     extends:
@@ -103,8 +131,3 @@ services:
     depends_on:
       traefik:
         condition: service_started
-
-  # db:
-  #   extends:
-  #     file: compose/apps/gitea.compose.yml
-  #     service: db

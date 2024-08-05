@@ -1,18 +1,18 @@
 ---
 - infra:
-  - unifi:
-      href: "http://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
-      icon: unifi
-      siteMonitor: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
-      widget:
-        type: unifi
-        url: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
-        username: "{{HOMEPAGE_VAR_UNIFI_LOCAL_USER}}"
-        password: "{{HOMEPAGE_VAR_UNIFI_PW}}"
-        fields: ["uptime", "lan_users", "wlan_users"]
+  # - unifi:
+  #     href: "http://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
+  #     icon: unifi
+  #     siteMonitor: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
+  #     widget:
+  #       type: unifi
+  #       url: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
+  #       username: "{{HOMEPAGE_VAR_UNIFI_LOCAL_USER}}"
+  #       password: "{{HOMEPAGE_VAR_UNIFI_PW}}"
+  #       fields: ["uptime", "lan_users", "wlan_users"]
 
   - traefik:
-      href: http://traefik.ecs.lan
+      href: http://traefik.ecs.lan:8081
       icon: traefik-proxy
       server: my-docker
       container: traefik

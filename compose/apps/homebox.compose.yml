@@ -17,5 +17,6 @@ services:
       - homepage.icon=homebox
       - homepage.href=http://homebox.ecs.lan
       - homepage.siteMonitor=http://homebox.ecs.lan
+      - homepage.showStats=true
       # - homepage.widget.type=homebox
       # - homepage.widget.url=http://homebox.ecs.lan

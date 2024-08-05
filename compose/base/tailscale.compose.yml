@@ -24,3 +24,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    labels:
+      - homepage.group=infra
+      - homepage.name=traefik-ts
+      - homepage.icon=tailscale
+      - homepage.showStats=true
+

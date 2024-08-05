@@ -1,14 +1,18 @@
 --- 
+- unifi_console:
+    href: "http://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
+    url: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
+    username: "{{HOMEPAGE_VAR_UNIFI_LOCAL_USER}}"
+    password: "{{HOMEPAGE_VAR_UNIFI_PW}}"
+
 - resources:
     cpu: true
     memory: true
     disk: /
     uptime: true
 
-- unifi_console:
-    url: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
-    username: "{{HOMEPAGE_VAR_UNIFI_LOCAL_USER}}"
-    password: "{{HOMEPAGE_VAR_UNIFI_PW}}"
+- search:
+    provider: duckduckgo
 
 - datetime:
     format:
