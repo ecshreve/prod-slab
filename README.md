@@ -18,7 +18,6 @@ I'm moving soon and want to make sure my computer setup was in a good place befo
 - [cAdvisor](#monitoring-and-metrics): Gather container metrics
 - [Grafana](#monitoring-and-metrics): Visualize metrics
 - [Prometheus](#monitoring-and-metrics): Collect metrics
-- Redis
 
 ### _Routing_
 - [Tailscale](#tailscale): Connect everything
@@ -75,21 +74,27 @@ Network logs (router, firewall, etc.) are sent to the Synology log server.
 
 ## Network
 
-### Traefik
-
-[Traefik](https://doc.traefik.io/traefik/routing/providers/docker/) routes requests by domain name. It creates routing rules for new Docker services using `<CONTAINER_NAME>.ecs.lan`.
-
 ### DNS
 
-I use the DNS Server package on a Synology NAS as a local DNS server. It's configured with CNAME records for services pointing to `traefik.ecs.lan`, which has an A record pointing to the Tailscale sidecar container.
+I have a wildcard DNS record on my router for `*.ecs.lan` pointing to the local docker IP of the Tailscale sidecar.
 
 ### Tailscale
 
-[Tailscale](https://tailscale.com/use-cases/homelab) provides secure connections between hosts and containers. DNS requests for `*.ecs.lan` go to a local DNS server running on the Synology NAS via a split tunnel configured in the admin console. Other traffic is handled as usual, with non-tailscale traffic using Cloudflare's public DNS.
+[Tailscale](https://tailscale.com/use-cases/homelab) provides secure connections between hosts and containers.
+
+<!-- https://tailscale.com/blog/docker-tailscale-guide#service-linking -->
+
+### Traefik
+
+[Traefik](https://doc.traefik.io/traefik/routing/providers/docker/) routes requests by domain name. It creates routing rules for new Docker services using `<CONTAINER_NAME>.ecs.lan`. It is connected to the tailscale container via `network_mode: service:<tailscale-service-name>`
+
+### Summary
+
+I make a request to `app.ecs.lan`, my router resolves that domain to the internal IP of the traefik/tailscale sidecar container, which routes the request to the correct service.
 
 ## Note
 
-This setup is a work in progress and is **not** suitable for internet exposure without additional network configuration. My setup includes a firewall, no port forwarding on the router, VLANs to separate lab and home network traffic, and the Docker host listening only on its Tailscale address. Logging and alerting is set up on my router for unusual network activity.
+This setup is a work in progress and is **not** suitable for internet exposure without additional network configuration. My setup includes a firewall, no port forwarding on the router, VLANs to separate lab and home network traffic, and the Docker host is not exposed over TCP. Logging and alerting is set up on my router for unusual network activity.
 
 ## TODO
 

@@ -5,6 +5,7 @@ services:
     image: traefik/whoami
     container_name: whoami
     restart: unless-stopped
+    hostname: whoami
     labels:
       - traefik.enable=true
       - homepage.group=apps
