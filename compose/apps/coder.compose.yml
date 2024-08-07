@@ -1,0 +1,49 @@
+# coder.compose.yml
+---
+volumes:
+  coder_data:
+    external: true
+
+services:
+  coder:
+    image: ghcr.io/coder/coder:latest
+    container_name: coder
+    restart: unless-stopped
+    expose:
+      - 7080
+    environment:
+      CODER_PG_CONNECTION_URL: "postgresql://coder_user:coder_pass@coderdb/coder?sslmode=disable"
+      CODER_HTTP_ADDRESS: "0.0.0.0:7080"
+      CODER_ACCESS_URL: "http://coder.ecs.lan"
+      CODER_TLS_ENABLE: "false"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - traefik.enable=true
+    depends_on:
+      coderdb:
+        condition: service_healthy
+
+  coderdb:
+    image: "postgres:16"
+    container_name: coderdb
+    expose:
+      - 5432
+    environment:
+      POSTGRES_USER: coder_user 
+      POSTGRES_PASSWORD: coder_pass 
+      POSTGRES_DB: coder 
+    volumes:
+      - coder_data:/var/lib/postgresql/data 
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U coder_user -d coder",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - traefik.enable=true
+

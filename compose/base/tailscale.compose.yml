@@ -1,10 +1,13 @@
 # tailscale.compose.yml
 ---
+volumes:
+  ts-state:
+
 services:
-  traefik-ts:
+  slabts:
     image: tailscale/tailscale:latest
-    container_name: traefik-ts
-    hostname: traefik-ts
+    container_name: slabts
+    hostname: slabts
     restart: unless-stopped
     environment:
       - TS_AUTHKEY=${TS_AUTH}
@@ -13,6 +16,7 @@ services:
       - TS_ACCEPT_ROUTES=true
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false
+      - TS_ROUTES=172.18.0.0/16
     volumes:
       - ts-state:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun
@@ -24,9 +28,4 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    labels:
-      - homepage.group=infra
-      - homepage.name=traefik-ts
-      - homepage.icon=tailscale
-      - homepage.showStats=true
 
