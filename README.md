@@ -18,7 +18,6 @@ I'm moving soon and want to make sure my computer setup was in a good place befo
 - [cAdvisor](#monitoring-and-metrics): Gather container metrics
 - [Grafana](#monitoring-and-metrics): Visualize metrics
 - [Prometheus](#monitoring-and-metrics): Collect metrics
-- Redis
 
 ### _Routing_
 - [Tailscale](#tailscale): Connect everything

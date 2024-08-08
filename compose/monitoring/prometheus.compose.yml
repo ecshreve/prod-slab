@@ -1,5 +1,9 @@
 # prometheus.compose.yml
 ---
+volumes:
+  prometheus_data:
+    external: true
+
 services:
   prometheus:
     image: prom/prometheus
@@ -18,10 +22,6 @@ services:
       - 9090
     labels:
       - traefik.enable=true
-      - homepage.group=metrics
-      - homepage.name=prometheus
-      - homepage.icon=prometheus
-      - homepage.href=http://prometheus.ecs.lan
-      - homepage.siteMonitor=http://prometheus.ecs.lan
-      - homepage.widget.type=prometheus
-      - homepage.widget.url=http://prometheus.ecs.lan
+    depends_on:
+      traefik:
+        condition: service_started
