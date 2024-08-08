@@ -10,6 +10,8 @@ configs:
     file: configs/traefik/traefik.toml
   dynamic.toml:
     file: configs/traefik/dynamic.toml
+  prometheus.yml:
+    file: configs/prometheus/prometheus.yml
 
 include:
   - path: compose/infra/traefik.compose.yml
@@ -18,6 +20,6 @@ include:
   # - path: compose/applications/homepage.compose.yml
   - path: compose/apps/gitea.compose.yml
   - path: compose/apps/homebox.compose.yml
-  # - path: compose/monitoring/cadvisor.compose.yml
-  # - path: compose/monitoring/prometheus.compose.yml
-  # - path: compose/monitoring/grafana.compose.yml
+  - path: compose/monitoring/cadvisor.compose.yml
+  - path: compose/monitoring/prometheus.compose.yml
+  - path: compose/monitoring/grafana.compose.yml

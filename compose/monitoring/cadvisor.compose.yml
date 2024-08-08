@@ -23,8 +23,6 @@ services:
       retries: 5
     labels:
       - traefik.enable=true
-      - homepage.group=metrics
-      - homepage.name=cadvisor
-      - homepage.icon=docker
-      - homepage.href=http://cadvisor.ecs.lan
-      - homepage.siteMonitor=http://cadvisor.ecs.lan
+    depends_on:
+      traefik:
+        condition: service_healthy
