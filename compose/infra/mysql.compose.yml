@@ -30,6 +30,8 @@ services:
     restart: unless-stopped
     expose:
       - 8080
+    labels:
+      - traefik.enable=true
     depends_on:
       db:
         condition: service_healthy
