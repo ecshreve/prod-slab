@@ -6,14 +6,8 @@ services:
     container_name: traefik
     restart: unless-stopped
     ports:
-      - target: 80
-        published: 80
-        protocol: tcp
-        mode: host
-      - target: 8080
-        published: 8080
-        protocol: tcp
-        mode: host
+      - "80:80"
+      - "8080:8080"
     configs:
       - source: traefik.toml
         target: /etc/traefik/traefik.toml

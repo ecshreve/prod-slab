@@ -1,0 +1,23 @@
+# server.compose.yml
+---
+networks:
+  default:
+    external: true
+    name: proxy-tsnet
+
+configs:
+  traefik.toml:
+    file: configs/traefik/traefik.toml
+  dynamic.toml:
+    file: configs/traefik/dynamic.toml
+
+include:
+  - path: compose/infra/traefik.compose.yml
+  - path: compose/infra/whoami.compose.yml
+  # - path: compose/databases/mysql.compose.yml
+  # - path: compose/applications/homepage.compose.yml
+  # - path: compose/applications/gitea.compose.yml
+  # - path: compose/applications/homebox.compose.yml
+  # - path: compose/monitoring/cadvisor.compose.yml
+  # - path: compose/monitoring/prometheus.compose.yml
+  # - path: compose/monitoring/grafana.compose.yml
