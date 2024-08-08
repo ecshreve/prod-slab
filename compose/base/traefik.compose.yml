@@ -4,8 +4,16 @@ services:
   traefik:
     image: traefik:v3.1
     container_name: traefik
-    network_mode: service:traefik-ts
     restart: unless-stopped
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: host
     configs:
       - source: traefik.toml
         target: /etc/traefik/traefik.toml
