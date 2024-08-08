@@ -1,5 +1,9 @@
 # prometheus.compose.yml
 ---
+volumes:
+  prometheus_data:
+    external: true
+
 services:
   prometheus:
     image: prom/prometheus
@@ -18,10 +22,26 @@ services:
       - 9090
     labels:
       - traefik.enable=true
-      - homepage.group=metrics
-      - homepage.name=prometheus
-      - homepage.icon=prometheus
-      - homepage.href=http://prometheus.ecs.lan
-      - homepage.siteMonitor=http://prometheus.ecs.lan
-      - homepage.widget.type=prometheus
-      - homepage.widget.url=http://prometheus.ecs.lan
+    depends_on:
+      traefik:
+        condition: service_started
+
+  node-exporter:
+    image: prom/node-exporter
+    container_name: node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command: 
+      - '--path.procfs=/host/proc' 
+      - '--path.sysfs=/host/sys'
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+    ports:
+      - 9100:9100
+    depends_on:
+      traefik:
+        condition: service_started
+    

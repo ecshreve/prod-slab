@@ -7,6 +7,9 @@ services:
     restart: unless-stopped
     environment:
       - TZ=America/Los_Angeles
+      - HOMEPAGE_VAR_UNIFI_LOCAL_USER=${HOMEPAGE_VAR_UNIFI_LOCAL_USER}
+      - HOMEPAGE_VAR_UNIFI_PW=${HOMEPAGE_VAR_UNIFI_PW}
+      - HOMEPAGE_VAR_UNIFI_CONTROLLER_IP=${HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}
     expose:
       - 3000
     volumes:
@@ -24,7 +27,6 @@ services:
         target: /app/config/settings.yaml
     labels:
       - traefik.enable=true
-      - homepage.group=apps
-      - homepage.name=homepage
-      - homepage.icon=homepage
-      - homepage.siteMonitor=http://homepage.ecs.lan
+    depends_on:
+      traefik: 
+        condition: service_started

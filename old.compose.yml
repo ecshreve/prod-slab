@@ -1,0 +1,140 @@
+---
+networks:
+  default:
+    external: true
+    name: proxy-tsnet
+
+configs:
+  prometheus.yml:
+    file: configs/prometheus/prometheus.yml
+  traefik.toml:
+    file: configs/traefik/traefik.toml
+  dynamic.toml:
+    file: configs/traefik/dynamic.toml
+  docker.yaml:
+   file: configs/homepage/docker.yaml
+  bookmarks.yaml:
+    file: configs/homepage/bookmarks.yaml
+  services.yaml:
+   file: configs/homepage/services.yaml
+  widgets.yaml:
+    file: configs/homepage/widgets.yaml
+  settings.yaml:
+    file: configs/homepage/settings.yaml
+
+volumes:
+  ts-state:
+  prometheus_data:
+    external: true
+  grafana_data:
+    external: true
+  homebox_data:
+    external: true
+  gitea_data:
+    external: true
+  mysql_data:
+    external: true
+  
+services:
+  traefik-ts:
+    extends:
+      file: compose/base/tailscale.compose.yml
+      service: traefik-ts
+    mem_limit: 128m
+
+  traefik:
+    extends:
+      file: compose/base/traefik.compose.yml
+      service: traefik
+    mem_limit: 256m
+    depends_on:
+      traefik-ts:
+        condition: service_healthy
+
+  whoami:
+    extends:
+      file: compose/base/whoami.compose.yml
+      service: whoami
+    mem_limit: 32m
+    depends_on:
+      traefik:
+        condition: service_healthy
+
+  homepage:
+    extends:
+      file: compose/apps/homepage.compose.yml
+      service: homepage
+    env_file:
+      - .env
+    mem_limit: 512m
+    depends_on:
+      traefik:
+        condition: service_started
+        
+  gitea:
+    extends:
+      file: compose/apps/gitea.compose.yml
+      service: gitea
+    env_file:
+      - .env
+    mem_limit: 512m
+    depends_on:
+      db:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+
+  db:
+    extends:
+      file: compose/base/mysql.compose.yml
+      service: db
+    env_file:
+      - .env
+    mem_limit: 1024m
+    depends_on:
+      traefik:
+        condition: service_started
+  
+  adminer:
+    extends:
+      file: compose/base/mysql.compose.yml
+      service: adminer
+    mem_limit: 32m
+    depends_on:
+      db:
+        condition: service_healthy
+      traefik:
+        condition: service_started
+
+  homebox:
+    extends:
+      file: compose/apps/homebox.compose.yml
+      service: homebox
+    mem_limit: 512m
+    depends_on:
+      traefik:
+        condition: service_started
+
+  cadvisor:
+    extends:
+      file: compose/monitoring/cadvisor.compose.yml
+      service: cadvisor
+    depends_on:
+      traefik:
+        condition: service_started
+
+  prometheus:
+    extends:
+      file: compose/monitoring/prometheus.compose.yml
+      service: prometheus
+    depends_on:
+      traefik:
+        condition: service_started
+
+  grafana:
+    extends:
+      file: compose/monitoring/grafana.compose.yml
+      service: grafana
+    depends_on:
+      traefik:
+        condition: service_started

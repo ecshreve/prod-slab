@@ -10,10 +10,8 @@ services:
       - 80
     labels:
       - traefik.enable=true
-      - homepage.group=apps
-      - homepage.name=whoami
-      - homepage.icon=docker
-      - homepage.href=http://whoami.ecs.lan
-      - homepage.siteMonitor=http://whoami:80
+    depends_on:
+      traefik:
+        condition: service_healthy
 
   

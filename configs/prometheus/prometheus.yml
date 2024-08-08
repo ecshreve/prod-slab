@@ -16,17 +16,20 @@ scrape_configs:
       - targets: ["traefik-ts:8081"]
     metrics_path: /metrics
 
-  - job_name: "synology-node-exporter"
-    static_configs:
-      - targets: ["host.docker.internal:9100"]
-    metrics_path: /metrics
+  # - job_name: "synology-node-exporter"
+  #   static_configs:
+  #     - targets: ["host.docker.internal:9100"]
+  #   metrics_path: /metrics
 
-  - job_name: "docker-daemon"
-    static_configs:
-      - targets: ["host.docker.internal:9323"]
-    metrics_path: /metrics
+  # - job_name: "docker-daemon"
+  #   static_configs:
+  #     - targets: ["host.docker.internal:9323"]
+  #   metrics_path: /metrics
 
   - job_name: "cadvisor"
     static_configs:
       - targets: ["cadvisor:8080"]
-    metrics_path: /metrics
+
+  - job_name: "dockerhost"
+    static_configs:
+      - targets: ["node-exporter:9100"]
