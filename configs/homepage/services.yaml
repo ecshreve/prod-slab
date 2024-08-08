@@ -1,22 +1,41 @@
 ---
 - infra:
   # - unifi:
-  #     href: "http://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
-  #     icon: unifi
-  #     siteMonitor: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
-  #     widget:
-  #       type: unifi
-  #       url: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
-  #       username: "{{HOMEPAGE_VAR_UNIFI_LOCAL_USER}}"
-  #       password: "{{HOMEPAGE_VAR_UNIFI_PW}}"
-  #       fields: ["uptime", "lan_users", "wlan_users"]
+  #   href: "http://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
+  #   icon: unifi
+  #   siteMonitor: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
+  #   widget:
+  #     type: unifi
+  #     url: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
+  #     username: "{{HOMEPAGE_VAR_UNIFI_LOCAL_USER}}"
+  #     password: "{{HOMEPAGE_VAR_UNIFI_PW}}"
 
   - traefik:
-      href: http://traefik.ecs.lan:8081
+      href: http://traefik.ecs.lan:8080
       icon: traefik-proxy
       server: my-docker
       container: traefik
-      siteMonitor: http://traefik.ecs.lan:8081
+      siteMonitor: http://traefik.ecs.lan:8080
       widget:
         type: traefik
-        url: http://traefik-ts:8081
+        url: http://traefik:8080
+
+- apps:
+  - gitea:
+      href: "http://gitea.ecs.lan"
+      icon: gitea
+      container: gitea
+      server: my-docker
+      siteMonitor: "http://gitea.ecs.lan"
+  - homebox:
+      href: "http://homebox.ecs.lan"
+      container: homebox
+      icon: homebox
+      server: my-docker
+      siteMonitor: "http://homebox.ecs.lan"
+  - homepage:
+      href: "http://homepage.ecs.lan"
+      icon: homepage
+      container: homepage
+      siteMonitor: "http://homepage.ecs.lan"
+      server: my-docker
