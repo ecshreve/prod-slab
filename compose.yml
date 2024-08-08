@@ -12,6 +12,10 @@ configs:
     file: configs/traefik/dynamic.toml
   prometheus.yml:
     file: configs/prometheus/prometheus.yml
+  rules.yml:
+    file: configs/prometheus/rules.yml
+  alertmanager.yml:
+    file: configs/prometheus/alertmanager.yml
   settings.yaml:
     file: configs/homepage/settings.yaml
   docker.yaml:
