@@ -15,18 +15,6 @@ services:
       - gitea_data:/data
     expose:
       - 3000
-      - 22
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.gitea.entrypoints=web
-      - traefik.http.routers.gitea.rule=Host(`gitea.ecs.lan`)
-      - traefik.http.services.gitea.loadbalancer.server.port=3000
-      - traefik.tcp.routers.gitea.entrypoints=ssh
-      - traefik.tcp.routers.gitea.rule=HostSNI(`*`)
-      - traefik.tcp.services.gitea.loadbalancer.server.port=22
-      - homepage.group=apps
-      - homepage.name=gitea
-      - homepage.icon=gitea
-      - homepage.href=http://gitea.ecs.lan
-      - homepage.siteMonitor=http://gitea.ecs.lan
-      - homepage.showStats=true
+    depends_on:
+      traefik:
+        condition: service
