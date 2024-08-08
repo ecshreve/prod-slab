@@ -1,5 +1,9 @@
 # gitea.compose.yml
 ---
+volumes:
+  gitea_data:
+    external: true
+
 services:
   gitea:
     image: gitea/gitea:latest
@@ -15,6 +19,14 @@ services:
       - gitea_data:/data
     expose:
       - 3000
+      - 22 #TODO work through ssh forwarding in new vm network configuration
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.gitea.entrypoints=web
+      - traefik.http.routers.gitea.rule=Host(`gitea.ecs.lan`)
+      - traefik.http.services.gitea.loadbalancer.server.port=3000
     depends_on:
       traefik:
-        condition: service
+        condition: service_started
+      db:
+        condition: service_healthy

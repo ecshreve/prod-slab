@@ -1,4 +1,8 @@
 ---
+volumes:
+  homebox_data:
+    external: true
+
 services:
   homebox:
     image: ecshreve/homebox-dev:latest
@@ -10,14 +14,8 @@ services:
       - 7745
     volumes:
       - homebox_data:/data
+    depends_on:
+      traefik:
+        condition: service_started
     labels:
       - traefik.enable=true
-      - homepage.group=apps
-      - homepage.name=homebox
-      - homepage.icon=homebox
-      - homepage.href=http://homebox.ecs.lan
-      - homepage.siteMonitor=http://homebox.ecs.lan
-      - homepage.showStats=true
-      #TODO grab new field names from fork and update widget
-      # - homepage.widget.type=homebox
-      # - homepage.widget.url=http://homebox.ecs.lan
