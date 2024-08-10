@@ -1,14 +1,14 @@
 ---
 - infra:
-  # - unifi:
-  #   href: "http://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
-  #   icon: unifi
-  #   siteMonitor: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
-  #   widget:
-  #     type: unifi
-  #     url: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
-  #     username: "{{HOMEPAGE_VAR_UNIFI_LOCAL_USER}}"
-  #     password: "{{HOMEPAGE_VAR_UNIFI_PW}}"
+  - unifi:
+      href: "http://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
+      icon: unifi
+      siteMonitor: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
+      widget:
+        type: unifi
+        url: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
+        username: "{{HOMEPAGE_VAR_UNIFI_LOCAL_USER}}"
+        password: "{{HOMEPAGE_VAR_UNIFI_PW}}"
 
   - traefik:
       href: http://traefik.ecs.lan:8080
@@ -39,3 +39,61 @@
       container: homepage
       siteMonitor: "http://homepage.ecs.lan"
       server: my-docker
+
+- monitoring:
+  - grafana:
+      href: "http://grafana.ecs.lan"
+      icon: grafana
+      container: grafana
+      server: my-docker
+      siteMonitor: "http://grafana.ecs.lan"
+      widget:
+        type: grafana
+        url: "http://grafana.ecs.lan"
+        username: admin
+        password: admin
+  - prometheus:
+      href: "http://prometheus.ecs.lan"
+      icon: prometheus
+      container: prometheus
+      server: my-docker
+      siteMonitor: "http://prometheus.ecs.lan"
+      widget:
+        type: prometheus
+        url: "http://prometheus.ecs.lan"
+  - alertmanager:
+      href: "http://alertmanager.ecs.lan"
+      icon: alertmanager
+      container: alertmanager
+      server: my-docker
+      siteMonitor: "http://alertmanager.ecs.lan"
+  - cadvisor:
+      href: "http://cadvisor.ecs.lan"
+      icon: cadvisor
+      container: cadvisor
+      server: my-docker
+      siteMonitor: "http://cadvisor.ecs.lan"
+
+- logging:
+  - loki:
+      href: "http://grafana.ecs.lan/a/grafana-lokiexplore-app/explore"
+      icon: loki
+      container: loki
+      server: my-docker
+      siteMonitor: "http://loki.ecs.lan/ready"
+      widget:
+        type: iframe
+        name: myIframe
+        src: http://grafana.ecs.lan/a/grafana-lokiexplore-app/explore
+        classes: h-60 sm:h-60 md:h-60 lg:h-60 xl:h-60 2xl:h-72 # optional, use tailwind height classes, see https://tailwindcss.com/docs/height
+        referrerPolicy: same-origin # optional, no default
+        allowPolicy: autoplay; fullscreen; gamepad # optional, no default
+        allowFullscreen: false # optional, default: true
+        loadingStrategy: eager # optional, default: eager
+        allowScrolling: no # optional, default: yes
+  - promtail:
+      href: "http://promtail.ecs.lan"
+      icon: prometheus
+      container: promtail
+      server: my-docker
+

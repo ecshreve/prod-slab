@@ -7,3 +7,6 @@ layout:
   devlinks:
     style: row
     columns: 4
+  apps:
+    style: row
+    columns: 4

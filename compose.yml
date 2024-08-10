@@ -16,6 +16,11 @@ configs:
     file: configs/prometheus/rules.yml
   alertmanager.yml:
     file: configs/prometheus/alertmanager.yml
+  promtail.yml:
+    file: configs/loki/promtail.yml
+  loki.yml:
+    file: configs/loki/loki.yml
+
   settings.yaml:
     file: configs/homepage/settings.yaml
   docker.yaml:
@@ -26,6 +31,14 @@ configs:
    file: configs/homepage/services.yaml
   widgets.yaml:
     file: configs/homepage/widgets.yaml
+
+x-logging:
+  &default-logging
+  driver: "json-file"
+  options:
+    max-size: "1m"
+    max-file: "1"
+    tag: "{{.Name}}"
   
 include:
   - path: compose/infra/traefik.compose.yml
@@ -39,3 +52,4 @@ include:
   - path: compose/monitoring/cadvisor.compose.yml
   - path: compose/monitoring/prometheus.compose.yml
   - path: compose/monitoring/grafana.compose.yml
+  - path: compose/monitoring/loki.compose.yml

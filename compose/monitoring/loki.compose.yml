@@ -1,0 +1,50 @@
+# loki.compose.yml
+---
+volumes:
+  promtail_logs:
+    external: true
+  loki_data:
+    external: true
+
+services:
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: loki
+    restart: unless-stopped
+    environment:
+      - TZ=America/Los_Angeles
+    expose:
+      - 3100
+    command: -config.file=/etc/loki/loki.yaml
+    configs:
+      - source: loki.yml
+        target: /etc/loki/loki.yaml
+    volumes:
+      - loki_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:3100/ready || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - traefik.enable=true
+    depends_on:
+      traefik:
+        condition: service_healthy
+
+  promtail:
+    image: grafana/promtail:3.0.0
+    container_name: promtail
+    volumes:
+      - promtail_logs:/var/log
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: -config.file=/etc/promtail/config.yml
+    configs:
+      - source: promtail.yml
+        target: /etc/promtail/config.yml
+    labels:
+      - traefik.enable=true
+    depends_on:
+      loki:
+        condition: service_healthy

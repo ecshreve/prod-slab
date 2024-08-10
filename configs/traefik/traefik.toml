@@ -4,6 +4,8 @@
 [metrics]
     [metrics.prometheus]
         addEntryPointsLabels = true
+        addRoutersLabels = true
+        addServicesLabels = true
 [entryPoints]
     [entryPoints.web]
         address = ":80"
@@ -16,9 +18,15 @@
     #     address = ":22"
     [entryPoints.traefik]
         address = ":8080"
-[log]
-    format = "json"
 [accessLog]
+    filePath = "/log/access.log"
+    format = "json"
+    [accessLog.fields]
+        defaultMode = "keep"
+    [accessLog.fields.names]
+        StartUTC = "drop"
+[log]
+    filePath = "/log/traefik.log"
     format = "json"
 [api]
     insecure = true
