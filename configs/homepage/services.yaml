@@ -10,16 +10,6 @@
         username: "{{HOMEPAGE_VAR_UNIFI_LOCAL_USER}}"
         password: "{{HOMEPAGE_VAR_UNIFI_PW}}"
 
-  - traefik:
-      href: http://traefik.ecs.lan:8080
-      icon: traefik-proxy
-      server: my-docker
-      container: traefik
-      siteMonitor: http://traefik.ecs.lan:8080
-      widget:
-        type: traefik
-        url: http://traefik:8080
-
 - apps:
   - gitea:
       href: "http://gitea.ecs.lan"
@@ -41,6 +31,15 @@
       server: my-docker
 
 - monitoring:
+  - traefik:
+      href: http://traefik.ecs.lan:8080
+      icon: traefik-proxy
+      server: my-docker
+      container: traefik
+      siteMonitor: http://traefik.ecs.lan:8080
+      widget:
+        type: traefik
+        url: http://traefik:8080
   - grafana:
       href: "http://grafana.ecs.lan"
       icon: grafana
@@ -61,6 +60,8 @@
       widget:
         type: prometheus
         url: "http://prometheus.ecs.lan"
+
+- backend:
   - alertmanager:
       href: "http://alertmanager.ecs.lan"
       icon: alertmanager
@@ -73,6 +74,11 @@
       container: cadvisor
       server: my-docker
       siteMonitor: "http://cadvisor.ecs.lan"
+  - promtail:
+      href: "http://promtail.ecs.lan"
+      icon: prometheus
+      container: promtail
+      server: my-docker
 
 - logging:
   - loki:
@@ -81,19 +87,13 @@
       container: loki
       server: my-docker
       siteMonitor: "http://loki.ecs.lan/ready"
+      showStats: false
       widget:
         type: iframe
         name: myIframe
-        src: http://grafana.ecs.lan/a/grafana-lokiexplore-app/explore
-        classes: h-60 sm:h-60 md:h-60 lg:h-60 xl:h-60 2xl:h-72 # optional, use tailwind height classes, see https://tailwindcss.com/docs/height
+        src: http://grafana.ecs.lan/d/Ts25XhS4zawd/docker-logs?orgId=1&refresh=1m&var-host=All&var-service=All&var-query=&showCategory=Axis
+        classes: h-72 sm:h-72 md:h-72 lg:h-96 xl:h-96 2xl:h-96 # optional, use tailwind height classes, see https://tailwindcss.com/docs/height
         referrerPolicy: same-origin # optional, no default
         allowPolicy: autoplay; fullscreen; gamepad # optional, no default
-        allowFullscreen: false # optional, default: true
         loadingStrategy: eager # optional, default: eager
-        allowScrolling: no # optional, default: yes
-  - promtail:
-      href: "http://promtail.ecs.lan"
-      icon: prometheus
-      container: promtail
-      server: my-docker
 

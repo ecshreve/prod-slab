@@ -31,14 +31,6 @@ configs:
    file: configs/homepage/services.yaml
   widgets.yaml:
     file: configs/homepage/widgets.yaml
-
-x-logging:
-  &default-logging
-  driver: "json-file"
-  options:
-    max-size: "1m"
-    max-file: "1"
-    tag: "{{.Name}}"
   
 include:
   - path: compose/infra/traefik.compose.yml
