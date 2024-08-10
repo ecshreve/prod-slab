@@ -1,9 +1,5 @@
 # traefik.compose.yml
 ---
-volumes:
-  traefik_logs:
-    external: true
-    
 services:
   traefik:
     image: traefik:v3.1
@@ -19,7 +15,6 @@ services:
         target: /etc/traefik/dynamic.toml
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - traefik_logs:/log
     healthcheck:
       test: ["CMD", "traefik", "healthcheck", "--ping"]
       interval: 10s

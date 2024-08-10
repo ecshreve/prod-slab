@@ -23,6 +23,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    depends_on:
+      traefik:
+        condition: service_started
 
   adminer:
     image: adminer

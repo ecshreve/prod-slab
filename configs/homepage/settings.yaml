@@ -4,9 +4,21 @@ title: "slab homepage"
 showStats: true
 
 layout:
-  devlinks:
-    style: row
-    columns: 4
   apps:
+    style: row
+    columns: 3
+  logging:
+    style: row
+    columns: 1
+  monitoring:
+    style: row
+    columns: 3
+  backend:
+    style: row
+    columns: 3
+  infra:
+    style: row
+    columns: 2
+  devlinks:
     style: row
     columns: 4

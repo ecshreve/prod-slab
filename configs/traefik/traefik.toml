@@ -19,15 +19,12 @@
     [entryPoints.traefik]
         address = ":8080"
 [accessLog]
-    filePath = "/log/access.log"
-    format = "json"
     [accessLog.fields]
         defaultMode = "keep"
     [accessLog.fields.names]
         StartUTC = "drop"
 [log]
-    filePath = "/log/traefik.log"
-    format = "json"
+    level = "debug"
 [api]
     insecure = true
 [ping]

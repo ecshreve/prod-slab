@@ -13,6 +13,10 @@ services:
     restart: unless-stopped
     environment:
       - TZ=America/Los_Angeles
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6831
+      - JAEGER_SAMPLER_TYPE=const
+      - JAEGER_SAMPLER_PARAM=1
     expose:
       - 3100
     command: -config.file=/etc/loki/loki.yaml
@@ -32,19 +36,22 @@ services:
       traefik:
         condition: service_healthy
 
-  promtail:
-    image: grafana/promtail:3.0.0
-    container_name: promtail
-    volumes:
-      - promtail_logs:/var/log
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: -config.file=/etc/promtail/config.yml
-    configs:
-      - source: promtail.yml
-        target: /etc/promtail/config.yml
-    labels:
-      - traefik.enable=true
-    depends_on:
-      loki:
-        condition: service_healthy
+  # promtail:
+  #   image: grafana/promtail:3.0.0
+  #   container_name: promtail
+  #   restart: unless-stopped
+  #   expose:
+  #     - 9080
+  #   volumes:
+  #     - promtail_logs:/var/log
+  #     - /var/lib/docker/containers:/var/lib/docker/containers:ro
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   command: -config.file=/etc/promtail/config.yml
+  #   configs:
+  #     - source: promtail.yml
+  #       target: /etc/promtail/config.yml
+  #   labels:
+  #     - traefik.enable=true
+  #   depends_on:
+  #     loki:
+  #       condition: service_healthy
