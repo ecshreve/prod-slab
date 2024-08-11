@@ -62,12 +62,6 @@
         url: "http://prometheus.ecs.lan"
 
 - backend:
-  - alertmanager:
-      href: "http://alertmanager.ecs.lan"
-      icon: alertmanager
-      container: alertmanager
-      server: my-docker
-      siteMonitor: "http://alertmanager.ecs.lan"
   - cadvisor:
       href: "http://cadvisor.ecs.lan"
       icon: cadvisor

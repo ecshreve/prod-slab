@@ -10,16 +10,16 @@ configs:
     file: configs/traefik/traefik.toml
   dynamic.toml:
     file: configs/traefik/dynamic.toml
+
   prometheus.yml:
     file: configs/prometheus/prometheus.yml
-  rules.yml:
-    file: configs/prometheus/rules.yml
-  alertmanager.yml:
-    file: configs/prometheus/alertmanager.yml
   promtail.yml:
     file: configs/loki/promtail.yml
   loki.yml:
     file: configs/loki/loki.yml
+
+  datasource.yml:
+    file: configs/grafana/datasource.yml
 
   settings.yaml:
     file: configs/homepage/settings.yaml
@@ -31,7 +31,7 @@ configs:
    file: configs/homepage/services.yaml
   widgets.yaml:
     file: configs/homepage/widgets.yaml
-  
+    
 include:
   - path: compose/infra/traefik.compose.yml
   - path: compose/infra/whoami.compose.yml
@@ -45,4 +45,3 @@ include:
   - path: compose/monitoring/prometheus.compose.yml
   - path: compose/monitoring/grafana.compose.yml
   - path: compose/monitoring/loki.compose.yml
-  - path: compose/monitoring/jaeger.compose.yml

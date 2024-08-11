@@ -5,6 +5,8 @@ services:
   # This container is a resource hog and I don't really like having the root
   # filesystem mounted as a volume. I need to figure out a better way to get
   # docker / application metrics.
+  # - 08/10/24 - the resource problem is less noticeable after moving
+  #   to a ubuntu vm from the synology nas, low priority
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor

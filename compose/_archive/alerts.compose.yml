@@ -1,0 +1,71 @@
+---
+volumes:
+  gotify_data:
+    external: true
+  n8n_data:
+    external: true
+  n8n_files:
+    external: true
+    
+services:
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    restart: unless-stopped
+    volumes:
+      - alertmanager_data:/etc/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+    environment:
+      - ALERTMANAGER_WEBHOOK_URL=http://n8n.ecs.lan/hook
+    configs:
+      - source: alertmanager.yml
+        target: /etc/alertmanager/config.yml
+    expose:
+      - 9093
+    labels:
+      - traefik.enable=true
+    depends_on:
+      prometheus:
+        condition: service_started
+    
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - 5678:5678
+    environment:
+      - N8N_HOST=n8n.ecs.lan
+      - N8N_SECURE_COOKIE=false
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - WEBHOOK_URL=https://n8n.ecs.lan/hook
+      - GENERIC_TIMEZONE=America/Los_Angeles
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - n8n_files:/files
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://loki:3100/loki/api/v1/push"
+    labels:
+      - traefik.enable=true
+
+  gotify:
+    image: gotify/server
+    container_name: gotify
+    restart: unless-stopped
+    expose:
+      - 80
+    environment:
+      - GOTIFY_DEFAULTUSER_PASS=password
+    volumes:
+      - "gotify_data:/app/data"
+    labels:
+      - traefik.enable=true
+    depends_on:
+      prometheus:
+        condition: service_started

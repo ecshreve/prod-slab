@@ -75,9 +75,14 @@ Network logs sent to Synology log server.
 
 Docker container logs are collected via [Loki]() and [Promtail](), and visualized in Grafana.
 
-### Tracing
+A fragment like this one could be used to directly use the loki logging driver in service defs
 
-Traefik and Loki send traces to a Jaeger instance, traces are also visualized in Grafana.
+```yaml
+x-logging-loki: &loki-logging
+  driver: loki
+  options:
+    loki-url: "http://loki:3100/loki/api/v1/push"
+```
 
 ## Network
 
@@ -102,7 +107,7 @@ This setup is in progress and **not** suitable for internet exposure without add
 - [ ] Terraform a DO droplet to use as a host or workspace target
 - [ ] Add Kavita e-reader app
 - [ ] Migrate secrets to HashiCorp Vault
-- [ ] Add Jaeger for tracing
+- [-] Add Jaeger for tracing
 - [ ] Add backup Synology host to tailnet
 - [ ] Backup volumes to vault2 (rename needed)
 - [ ] Implement metric snapshot emails

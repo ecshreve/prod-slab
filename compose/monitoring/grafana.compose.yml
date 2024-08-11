@@ -11,6 +11,9 @@ services:
     restart: unless-stopped
     environment:
       - GF_SECURITY_ALLOW_EMBEDDING=true
+    configs:
+      - source: datasource.yml
+        target: /etc/grafana/provisioning/datasources/datasource.yml
     volumes:
       - grafana_data:/var/lib/grafana
     expose:

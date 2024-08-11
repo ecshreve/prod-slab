@@ -7,10 +7,6 @@
         addRoutersLabels = true
         addServicesLabels = true
 
-[tracing]
-    [tracing.otlp.http]
-        endpoint = "http://jaeger:4318/v1/traces"
-
 [entryPoints]
     [entryPoints.web]
         address = ":80"
