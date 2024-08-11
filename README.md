@@ -19,6 +19,7 @@ Preparing my setup for an upcoming move, experimenting with configurations for [
 - [NodeExporter](#monitoring-and-metrics): Host metrics
 - [Grafana](#monitoring-and-metrics): Visualization
 - [Prometheus](#monitoring-and-metrics): Metrics collection
+- [Loki](#logging): Log collection
 
 ### _Infra_
 - [Tailscale](#tailscale): Network connections
@@ -68,9 +69,15 @@ Preparing my setup for an upcoming move, experimenting with configurations for [
 
 ![Grafana Screenshot 2](./images/container%20metrics.png)
 
-### Logs
+### Logging
 
 Network logs sent to Synology log server.
+
+Docker container logs are collected via [Loki]() and [Promtail](), and visualized in Grafana.
+
+### Tracing
+
+Traefik and Loki send traces to a Jaeger instance, traces are also visualized in Grafana.
 
 ## Network
 
