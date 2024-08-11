@@ -45,3 +45,4 @@ include:
   - path: compose/monitoring/prometheus.compose.yml
   - path: compose/monitoring/grafana.compose.yml
   - path: compose/monitoring/loki.compose.yml
+  - path: compose/monitoring/jaeger.compose.yml
