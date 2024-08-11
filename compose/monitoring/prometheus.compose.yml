@@ -3,8 +3,6 @@
 volumes:
   prometheus_data:
     external: true
-  alertmanager_data:
-    external: true
 
 services:
   prometheus:
@@ -16,12 +14,8 @@ services:
     configs:
       - source: prometheus.yml
         target: /etc/prometheus/prometheus.yml
-      - source: rules.yml
-        target: /etc/prometheus/rules.yml
     volumes:
       - prometheus_data:/prometheus
-    extra_hosts:
-      - "host.docker.internal:host-gateway" # Needed for cAdvisor host
     expose:
       - 9090
     labels:
@@ -45,29 +39,6 @@ services:
       - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
     ports:
       - 9100:9100
-    depends_on:
-      prometheus:
-        condition: service_started
-    
-
-  alertmanager:
-    image: prom/alertmanager:latest
-    container_name: alertmanager
-    restart: unless-stopped
-    volumes:
-      - alertmanager_data:/etc/alertmanager
-    command:
-      - '--config.file=/etc/alertmanager/config.yml'
-      - '--storage.path=/alertmanager'
-    environment:
-      - ALERTMANAGER_WEBHOOK_URL=${ALERTMANAGER_WEBHOOK_URL}
-    configs:
-      - source: alertmanager.yml
-        target: /etc/alertmanager/config.yml
-    expose:
-      - 9093
-    labels:
-      - traefik.enable=true
     depends_on:
       prometheus:
         condition: service_started
