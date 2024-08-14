@@ -1,0 +1,22 @@
+---
+services:
+  deluge:
+    image: linuxserver/deluge
+    container_name: deluge
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /mnt/data:/data
+      - /mnt/data:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+    depends_on:
+      traefik:
+        condition: service_started
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.deluge.entrypoints=web
+      - traefik.http.routers.deluge.rule=Host(`deluge.ecs.lan`)
+      - traefik.http.services.deluge.loadbalancer.server.port=8112
