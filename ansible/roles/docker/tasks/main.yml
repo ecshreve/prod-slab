@@ -1,0 +1,50 @@
+---
+- name: Ensure old versions of Docker are NOT installed
+  ansible.builtin.package:
+    name:
+      - docker
+      - docker-engine
+      - docker
+      - docker.io
+      - containerd
+      - runc
+    state: absent
+    update-cache: true
+
+- name: Add Docker GPG apt Key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  ansible.builtin.apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    state: present
+
+- name: Update apt and install docker-ce
+  ansible.builtin.apt:
+    name: '{{ docker_pkg }}'
+    state: present
+    update_cache: true
+  notify: Restart docker
+  ignore_errors: '{{ ansible_check_mode }}'
+
+- name: Install Docker Module for Python
+  ansible.builtin.pip:
+    executable: pip3
+    name:
+      - docker
+      - docker-compose
+  notify: Restart docker
+
+- name: Create user
+  ansible.builtin.user:
+    name: "{{ docker_user }}"
+    shell: /usr/bin/bash
+    create_home: true
+    state: present
+    uid: 1001
+    groups:
+      - sudo
+      - adm
+      - docker
