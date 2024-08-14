@@ -1,0 +1,19 @@
+---
+volumes:
+  lounge_data:
+    external: true
+
+services:
+  thelounge:
+    image: ghcr.io/thelounge/thelounge:latest
+    container_name: thelounge
+    expose:
+      - 9000
+    restart: unless-stopped
+    volumes:
+      - lounge_data:/var/opt/thelounge
+    depends_on:
+      traefik:
+        condition: service_started
+    labels:
+      - traefik.enable=true
