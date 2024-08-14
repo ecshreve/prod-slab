@@ -16,25 +16,15 @@ scrape_configs:
       - targets: ["traefik.ecs.lan:8080"]
     metrics_path: /metrics
 
-  # - job_name: "synology-node-exporter"
-  #   static_configs:
-  #     - targets: ["host.docker.internal:9100"]
-  #   metrics_path: /metrics
-
-  # - job_name: "docker-daemon"
-  #   static_configs:
-  #     - targets: ["host.docker.internal:9323"]
-  #   metrics_path: /metrics
-
   - job_name: "cadvisor"
     static_configs:
       - targets: ["cadvisor:8080"]
 
   - job_name: "dockerhost"
     static_configs:
-      - targets: ["node-exporter:9100", "coder-eric-cloudbox:9100"]
+      - targets: ["node-exporter:9100", "cloudbox0:9100"]
 
   - job_name: "promtail"
     honor_timestamps: true
     static_configs:
-      - targets: ["promtail:9080", "dcoder-eric-cloudbox:9080"]
+      - targets: ["promtail:9080", "cloudbox0:9080"]
