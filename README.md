@@ -47,7 +47,7 @@ Preparing my setup for an upcoming move, experimenting with configurations for [
 
 ### Coder
 
-[Coder](https://coder.com/) manages dev environments with templates and workspaces. Currently running in a bespoke and slightly brittle local setup. The application isn't really designed for a single developer use case, but I've found it much more fun than VSCode devcontainers.
+[Coder](https://coder.com/) manages dev environments with templates and workspaces. Currently running in a bespoke and slightly brittle local setup. The application isn't really designed for a single developer use case, but I've found it much more fun than VSCode devcontainers or GitHub codespaces
 
 ![Coder Screenshot](./images/coder.jpeg)
 
@@ -104,6 +104,7 @@ This setup is in progress and **not** suitable for internet exposure without add
 
 ## TODO
 
+- [ ] Add raycast snippets for the coder start/stop scripts
 - [ ] Terraform a DO droplet to use as a host or workspace target
 - [ ] Add Kavita e-reader app
 - [ ] Migrate secrets to HashiCorp Vault

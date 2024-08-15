@@ -23,28 +23,16 @@
 
 - name: Update apt and install docker-ce
   ansible.builtin.apt:
-    name: '{{ docker_pkg }}'
+    name: docker-ce
     state: present
     update_cache: true
   notify: Restart docker
   ignore_errors: '{{ ansible_check_mode }}'
 
-- name: Install Docker Module for Python
-  ansible.builtin.pip:
-    executable: pip3
-    name:
-      - docker
-      - docker-compose
-  notify: Restart docker
-
-- name: Create user
+- name: Add user to docker group
   ansible.builtin.user:
     name: "{{ docker_user }}"
-    shell: /usr/bin/bash
-    create_home: true
-    state: present
-    uid: 1001
-    groups:
-      - sudo
-      - adm
-      - docker
+    groups: docker
+    append: true
+  notify: Restart docker
+  ignore_errors: '{{ ansible_check_mode }}'
