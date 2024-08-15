@@ -1,3 +1,10 @@
+# This was used when I was running the coder binary on my laptop and still
+# wanted to use traefik in between.
+#
+# Currently I have coder running as a system service on a VM and listening
+# on port 80, in addition to a DNS record on my router pointing coder.ecs.lan
+# to the tailscale IP of that VM.
+#
 # [http]
 #     [http.routers]
 #         [http.routers.coder-rtr]

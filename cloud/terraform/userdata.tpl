@@ -1,5 +1,12 @@
 #cloud-config
 ---
+users:
+  - name: eric
+    ssh-authorized-keys:
+      - ${ssh_authorized_key}
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: sudo
+    shell: /bin/bash
 apt:
   sources:
     tailscale.list:
