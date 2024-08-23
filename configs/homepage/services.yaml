@@ -9,6 +9,14 @@
         url: "https://{{HOMEPAGE_VAR_UNIFI_CONTROLLER_IP}}"
         username: "{{HOMEPAGE_VAR_UNIFI_LOCAL_USER}}"
         password: "{{HOMEPAGE_VAR_UNIFI_PW}}"
+  - coder:
+      href: "http://coder.ecs.lan"
+      icon: coder
+      siteMonitor: "http://coder.ecs.lan"
+      widget:
+        type: tailscale
+        deviceid: "{{HOMEPAGE_VAR_TAILSCALE_DEVICE}}"
+        key: "{{HOMEPAGE_VAR_TAILSCALE_KEY}}"
 
 - apps:
   - gitea:

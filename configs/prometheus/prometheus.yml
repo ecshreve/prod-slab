@@ -32,9 +32,9 @@ scrape_configs:
 
   - job_name: "dockerhost"
     static_configs:
-      - targets: ["node-exporter:9100"]
+      - targets: ["node-exporter:9100", "coder-eric-cloudbox:9100"]
 
   - job_name: "promtail"
     honor_timestamps: true
     static_configs:
-      - targets: ["promtail:9080"]
+      - targets: ["promtail:9080", "dcoder-eric-cloudbox:9080"]
