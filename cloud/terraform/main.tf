@@ -35,8 +35,8 @@ data "digitalocean_volume" "vol" {
 
 resource "digitalocean_droplet" "server" {
   count      = 1
-  name       = "${var.server_name}-${count.index}"
-  size       = "s-2vcpu-2gb"
+  name       = "${var.server_name}${count.index}"
+  size       = "s-2vcpu-4gb"
   image      = "ubuntu-20-04-x64"
   tags       = [ "dev" ]
   region     = "sfo3"

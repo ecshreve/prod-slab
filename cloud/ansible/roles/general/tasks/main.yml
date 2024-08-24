@@ -14,3 +14,24 @@
       - python3-pip
     state: present
     update_cache: true
+
+- name: Ensure mount directory exists
+  ansible.builtin.file:
+    path: /mnt/prod_slab_vol
+    state: directory
+    mode: '0755'
+
+- name: Mount the volume
+  ansible.builtin.mount:
+    path: /mnt/prod_slab_vol
+    src: /dev/disk/by-id/scsi-0DO_Volume_prod-slab-vol
+    fstype: ext4
+    opts: discard,defaults
+    state: mounted
+
+- name: Ensure the volume is mounted on boot
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: '/dev/disk/by-id/scsi-0DO_Volume_prod-slab-vol /mnt/prod_slab_vol ext4 defaults,nofail,discard 0 0'
+    state: present
+    backup: yes
