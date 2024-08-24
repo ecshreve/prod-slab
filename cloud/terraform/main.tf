@@ -14,18 +14,23 @@ terraform {
   }
 }
 
-variable "do_token" {}
-variable "ts_token" {}
+variable "do_tok" {}
+variable "ts_tok" {}
 variable "ssh_pub_key" {}
 variable "server_name" {}
 
 provider "digitalocean" {
-    token = var.do_token
+    token = var.do_tok
 }
 
 resource "digitalocean_ssh_key" "default" {
   name       = "do ssh key"
   public_key = var.ssh_pub_key
+}
+
+data "digitalocean_volume" "vol" {
+  name   = "prod-slab-vol"
+  region = "sfo3"
 }
 
 resource "digitalocean_droplet" "server" {
@@ -36,10 +41,11 @@ resource "digitalocean_droplet" "server" {
   tags       = [ "dev" ]
   region     = "sfo3"
   monitoring = true
+  volume_ids = [data.digitalocean_volume.vol.id]
   ssh_keys   = [digitalocean_ssh_key.default.fingerprint]
   user_data  = templatefile("${path.module}/userdata.tpl", {
     ssh_authorized_key = var.ssh_pub_key
-    tailscale_key = var.ts_token
+    tailscale_key = var.ts_tok
   })
 }
 
