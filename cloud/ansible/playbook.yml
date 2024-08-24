@@ -1,9 +1,13 @@
 ---
-- name: Docker Host Setup
+- name: General Setup
   hosts: all
   become: true
   roles:
     - general
     - docker
-  vars:
-    docker_user: "eric"
+
+- name: Cloud Droplet Setup
+  hosts: cloudbox0
+  become: true
+  roles:
+    - droplet

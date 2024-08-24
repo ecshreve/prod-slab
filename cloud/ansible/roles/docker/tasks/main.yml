@@ -31,7 +31,7 @@
 
 - name: Add user to docker group
   ansible.builtin.user:
-    name: eric
+    name: '{{ lookup("env", "USER") }}'
     groups: docker
     append: true
   notify: Restart docker

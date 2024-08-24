@@ -1,4 +1,7 @@
 ---
+include:
+  - path: media.compose.yml
+
 services:
   whoami-do:
     image: traefik/whoami

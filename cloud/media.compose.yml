@@ -1,22 +1,20 @@
 ---
 services:
-  deluge:
-    image: linuxserver/deluge
-    container_name: deluge
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    hostname: readarr
     restart: unless-stopped
     network_mode: host
     volumes:
-      - /mnt/data:/data
-      - /mnt/data:/config
+      - /home/eric/mediaconfigs/readarr:/config
+      - /home/eric/mediadata:/data
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=America/Los_Angeles
-    depends_on:
-      traefik:
-        condition: service_started
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.deluge.entrypoints=web
-      - traefik.http.routers.deluge.rule=Host(`deluge.ecs.lan`)
-      - traefik.http.services.deluge.loadbalancer.server.port=8112
+      - TZ=America/New_LosAngeles
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8787"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
