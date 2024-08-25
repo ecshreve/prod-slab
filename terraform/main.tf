@@ -6,6 +6,7 @@ terraform {
       name = "prod-slab"
     }
   }
+
   required_providers {
     digitalocean = {
       source = "digitalocean/digitalocean"
@@ -19,21 +20,26 @@ terraform {
       source = "hashicorp/local"
       version = "2.5.1"
     }
+    hcp = {
+      source = "hashicorp/hcp"
+      version = "0.95.0"
+    }
   }
 }
 
-variable "do_tok" {}
-variable "ts_tok" {}
-variable "ssh_pub_key" {}
-variable "server_name" {}
+provider "hcp" {}
+
+data "hcp_vault_secrets_app" "prod" {
+  app_name = "prod-slab"
+}
 
 provider "digitalocean" {
-    token = var.do_tok
+    token = data.hcp_vault_secrets_app.prod.secrets["do_tok"]
 }
 
 resource "digitalocean_ssh_key" "default" {
   name       = "do ssh key"
-  public_key = var.ssh_pub_key
+  public_key = data.hcp_vault_secrets_app.prod.secrets["ssh_pub"]
 }
 
 data "digitalocean_volume" "vol" {
@@ -41,9 +47,18 @@ data "digitalocean_volume" "vol" {
   region = "sfo3"
 }
 
+resource "local_sensitive_file" "userdata" {
+  content = templatefile("${path.module}/userdata.tpl", {
+    ssh_authorized_key = data.hcp_vault_secrets_app.prod.secrets["ssh_pub"]
+    tailscale_key = data.hcp_vault_secrets_app.prod.secrets["ts_tok"]
+  })
+  
+  filename = "${path.module}/userdata.cfg"
+}
+
 resource "digitalocean_droplet" "server" {
   count      = 1
-  name       = "${var.server_name}${count.index}"
+  name       = "cloudbox${count.index}"
   size       = "s-2vcpu-4gb"
   image      = "ubuntu-20-04-x64"
   tags       = [ "dev" ]
@@ -52,27 +67,15 @@ resource "digitalocean_droplet" "server" {
   ipv6       = true
   volume_ids = [data.digitalocean_volume.vol.id]
   ssh_keys   = [digitalocean_ssh_key.default.fingerprint]
-  user_data  = templatefile("${path.module}/userdata.tpl", {
-    ssh_authorized_key = var.ssh_pub_key
-    tailscale_key = var.ts_tok
-  })
+  user_data  = file(local_sensitive_file.userdata.filename)
 }
 
-output "public_ip" {
+output "do_public_ip" {
   value = digitalocean_droplet.server.*.ipv4_address
 }
 
-output "private_ip" {
+output "do_private_ip" {
   value = digitalocean_droplet.server.*.ipv4_address_private 
-}
-
-resource "local_sensitive_file" "userdata" {
-  content = templatefile("${path.module}/userdata.tpl", {
-    ssh_authorized_key = var.ssh_pub_key
-    tailscale_key = var.ts_tok
-  })
-  
-  filename = "${path.module}/userdata.cfg"
 }
 
 resource "multipass_instance" "vm" {
@@ -84,3 +87,4 @@ resource "multipass_instance" "vm" {
     disk = "20G"
     cloudinit_file = local_sensitive_file.userdata.filename
 }
+
