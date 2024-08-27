@@ -1,5 +1,9 @@
 datacenter = "dc1"
 data_dir   = "/opt/consul"
+server     = true
+bootstrap_expect = 1
+
+# hcp cloud config goes here
 
 client_addr = "{{GetInterfaceIP \"tailscale0\"}}"
 advertise_addr = "{{GetInterfaceIP \"tailscale0\"}}"

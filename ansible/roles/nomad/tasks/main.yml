@@ -1,0 +1,45 @@
+---
+- name: Include hashicorp setup role
+  ansible.builtin.include_role:
+    name: hashicorp
+
+- name: Ensure nomad package installed
+  ansible.builtin.apt:
+    name: nomad
+    state: present
+    update-cache: true
+
+- name: Create nomad directories
+  ansible.builtin.file:
+    name: "{{ item }}"
+    state: directory
+    owner: nomad
+    group: nomad
+    mode: "0755"
+  loop:
+    - /etc/nomad.d
+    - /opt/nomad
+
+- name: Copy server config
+  ansible.builtin.copy:
+    src: server.config.hcl
+    dest: /etc/nomad.d/nomad.hcl
+    owner: nomad
+    group: nomad
+    mode: "0644"
+    force: true
+  notify:
+    - Restart nomad
+  ignore_errors: '{{ ansible_check_mode }}'
+
+- name: Copy service unit file
+  ansible.builtin.copy:
+    src: nomad.service
+    dest: /etc/systemd/system/nomad.service
+    owner: nomad
+    group: nomad
+    mode: "0644"
+    force: true
+  notify:
+    - Restart nomad
+  ignore_errors: '{{ ansible_check_mode }}'

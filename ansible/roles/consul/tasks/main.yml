@@ -1,0 +1,45 @@
+---
+- name: Include hashicorp setup role
+  ansible.builtin.include_role:
+    name: hashicorp
+
+- name: Ensure consul package installed
+  ansible.builtin.apt:
+    name: consul
+    state: present
+    update-cache: true
+
+- name: Create consul directories
+  ansible.builtin.file:
+    name: "{{ item }}"
+    state: directory
+    owner: consul
+    group: consul
+    mode: "0755"
+  loop:
+    - /etc/consul.d
+    - /opt/consul
+
+- name: Copy server config
+  ansible.builtin.copy:
+    src: server.config.hcl
+    dest: /etc/consul.d/consul.hcl
+    owner: consul
+    group: consul
+    mode: "0644"
+    force: true
+  notify:
+    - Restart consul
+  ignore_errors: '{{ ansible_check_mode }}'
+
+- name: Copy service unit file
+  ansible.builtin.copy:
+    src: consul.service
+    dest: /etc/systemd/system/consul.service
+    owner: consul
+    group: consul
+    mode: "0644"
+    force: true
+  notify:
+    - Restart consul
+  ignore_errors: '{{ ansible_check_mode }}'

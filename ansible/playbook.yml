@@ -6,3 +6,5 @@
     - general
     - droplet
     - docker
+    - consul
+    - nomad
