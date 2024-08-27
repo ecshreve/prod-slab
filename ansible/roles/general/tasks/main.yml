@@ -24,3 +24,12 @@
     - { name: "net.ipv4.ip_nonlocal_bind", value: "1" }
     - { name: "net.ipv4.conf.all.forwarding", value: "1" }
   notify: Apply Sysctl Changes
+
+- name: Create appdata directory in user home
+  ansible.builtin.file:
+    name: "/home/{{ dev_user }}/appdata"
+    state: directory
+    owner: "{{ dev_user }}"
+    group: "{{ dev_user }}"
+    mode: "0755"
+  ignore_errors: "{{ ansible_check_mode }}"

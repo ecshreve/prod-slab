@@ -28,6 +28,19 @@
     group: consul
     mode: "0644"
     force: true
+  when: inventory_hostname == 'localbox'
+  notify:
+    - Restart consul
+  ignore_errors: '{{ ansible_check_mode }}'
+
+- name: Copy agent config
+  ansible.builtin.copy:
+    src: agent.config.hcl
+    dest: /etc/consul.d/agent.hcl
+    owner: consul
+    group: consul
+    mode: "0644"
+    force: true
   notify:
     - Restart consul
   ignore_errors: '{{ ansible_check_mode }}'

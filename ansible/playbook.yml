@@ -1,26 +1,19 @@
-# ---
-# - name: Droplet Setup
-#   hosts: droplets
-#   become: true
-#   roles:
-#     - general
-#     - droplet
-#     - docker
-#     - consul
-#     - nomad
 ---
-- name: Multipass Setup
-  hosts: nomad_clients
+- name: Dev Sync Setup
+  hosts:
+    - cloudbox
+    - localbox
   become: true
   roles:
-    # - general
+    - general
     # - docker
-    # - consul
+    - consul
     - nomad
-  pre_tasks:
-    - name: Clean consul and nomad data
-      ansible.builtin.file:
-        name: /home/eric/appdata
-        state: directory
-        mode: "0755"
-      
+  vars:
+    dev_user: eric
+
+# - name: Droplet Setup
+#   hosts: cloudbox
+#   become: true
+#   roles:
+#     - droplet

@@ -23,7 +23,20 @@
 - name: Copy server config
   ansible.builtin.copy:
     src: server.config.hcl
-    dest: /etc/nomad.d/nomad.hcl
+    dest: /etc/nomad.d/server.hcl
+    owner: nomad
+    group: nomad
+    mode: "0644"
+    force: true
+  when: inventory_hostname == 'localbox'
+  notify:
+    - Restart nomad
+  ignore_errors: '{{ ansible_check_mode }}'
+
+- name: Copy client config
+  ansible.builtin.copy:
+    src: client.config.hcl
+    dest: /etc/nomad.d/client.hcl
     owner: nomad
     group: nomad
     mode: "0644"
