@@ -1,0 +1,20 @@
+---
+- name: Install dependencies
+  ansible.builtin.apt:
+    name:
+      - git
+      - unzip
+      - gnupg
+      - acl
+    state: present
+    update_cache: true
+
+- name: Add Hashicorp apt key
+  ansible.builtin.apt_key:
+    url: https://apt.releases.hashicorp.com/gpg
+    state: present
+
+- name: Add Hashicorp apt repo
+  ansible.builtin.apt_repository:
+    repo: "deb https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
+    state: present

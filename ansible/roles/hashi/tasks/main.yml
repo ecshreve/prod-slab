@@ -1,0 +1,9 @@
+---
+- name: Setup
+  ansible.builtin.include_tasks: setup.yml
+
+- name: Install and configure Consul
+  ansible.builtin.include_tasks: consul.yml
+
+- name: Install and configure Nomad
+  ansible.builtin.include_tasks: nomad.yml

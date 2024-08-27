@@ -1,0 +1,26 @@
+---
+- name: Install general packages
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+      - software-properties-common
+      - net-tools
+      - nmap
+      - python3
+      - python3-pip
+    state: present
+    update_cache: true
+
+- name: Modify sysctl entry for netipv4ip_nonlocal_bind
+  ansible.posix.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    - { name: "net.ipv4.ip_nonlocal_bind", value: "1" }
+    - { name: "net.ipv4.conf.all.forwarding", value: "1" }
+  notify: Apply Sysctl Changes

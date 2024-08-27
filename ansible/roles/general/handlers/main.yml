@@ -1,0 +1,4 @@
+---
+- name: Apply Sysctl Changes
+  ansible.builtin.command: sysctl -p /etc/sysctl.conf
+  ignore_errors: "{{ ansible_check_mode }}"

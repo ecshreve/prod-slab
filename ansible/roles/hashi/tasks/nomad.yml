@@ -1,0 +1,86 @@
+---
+- name: Ensure nomad package installed
+  ansible.builtin.apt:
+    name: nomad
+    state: present
+    update-cache: true
+
+- name: Remove config directory
+  ansible.builtin.file:
+    dest: /etc/nomad.d
+    state: absent
+  when: clean
+
+- name: Remove data directory
+  ansible.builtin.file:
+    dest: /opt/nomad
+    state: absent
+  when: clean
+
+- name: Check / create the config directory exists
+  ansible.builtin.file:
+    dest: /etc/nomad.d
+    state: directory
+    owner: nomad
+    group: nomad
+    mode: "0755"
+
+- name: Check / create the data directory exists
+  ansible.builtin.file:
+    dest: /opt/nomad
+    state: directory
+    owner: nomad
+    group: nomad
+    mode: "0755"
+
+- name: Copy server config
+  ansible.builtin.copy:
+    src: nomad.server.config.hcl
+    dest: /etc/nomad.d/server.hcl
+    owner: nomad
+    group: nomad
+    mode: "0644"
+    force: true
+  notify:
+    - Restart nomad
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: "'nomad_servers' in group_names"
+
+- name: Copy client config
+  ansible.builtin.copy:
+    src: nomad.client.config.hcl
+    dest: /etc/nomad.d/client.hcl
+    owner: nomad
+    group: nomad
+    mode: "0644"
+    force: true
+  notify:
+    - Restart nomad
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: "'nomad_clients' in group_names"
+
+- name: Copy service unit file for server
+  ansible.builtin.copy:
+    src: nomad.service
+    dest: /etc/systemd/system/nomad.service
+    owner: nomad
+    group: nomad
+    mode: "0644"
+    force: true
+  notify:
+    - Restart nomad
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: "'nomad_servers' in group_names"
+
+- name: Copy service unit file for client
+  ansible.builtin.copy:
+    src: nomad.service
+    dest: /etc/systemd/system/nomad.service
+    owner: root
+    group: root
+    mode: "0644"
+    force: true
+  notify:
+    - Restart nomad
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: "'nomad_clients' in group_names"

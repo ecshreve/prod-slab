@@ -1,9 +1,0 @@
----
-- name: Docker Host Setup
-  hosts: all
-  become: true
-  roles:
-    - general
-    - docker
-  vars:
-    docker_user: "eric"
