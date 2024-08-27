@@ -1,7 +1,8 @@
 datacenter = "dc1"
 data_dir   = "/opt/consul"
-server     = true
-bootstrap_expect = 1
+server     = false
+
+retry_join = ["cloudbox.kitty-powan.ts.net"]
 
 # hcp cloud config goes here
 

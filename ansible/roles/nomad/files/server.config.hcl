@@ -2,7 +2,7 @@ datacenter = "dc1"
 data_dir   = "/opt/nomad/data"
 
 server {
-  enabled = true
+  enabled = false
   bootstrap_expect = 1
 }
 
@@ -19,6 +19,10 @@ client {
   }
   host_network "tailscale" {
     cidr = "100.0.0.0/8"
+  }
+  host_volume "appdata" {
+    path = "/home/eric/appdata"
+    read_only = false
   }
 }
 
