@@ -15,4 +15,4 @@ apt:
 packages:
   - tailscale
 runcmd:
-  - [tailscale, up, --auth-key, ${tailscale_key}, --accept-routes, --accept-dns]
+  - [tailscale, up, --auth-key, ${tailscale_key}, --accept-routes, --accept-dns, --ssh]
