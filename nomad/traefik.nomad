@@ -6,7 +6,7 @@ job "traefik" {
     constraint {
       attribute = "${node.unique.name}"
       operator  = "regexp"
-      value     = "^cloudbox$"
+      value     = "^localbox$"
     }
 
     network {

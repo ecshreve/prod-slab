@@ -16,13 +16,15 @@ job "grafana" {
 
       env = {
         GF_SECURITY_ALLOW_EMBEDDING = "true"
+        GF_AUTH_ANONYMOUS_ENABLED = "true"
+        GF_AUTH_ANONYMOUS_ORG_ROLE = "Admin"
       }
 
       config {
         image = "grafana/grafana-enterprise"
         ports = ["grafana"]
         volumes = [
-          ":/etc/grafana/grafana.ini",
+          "/home/eric/appdata/grafana:/var/lib/grafana",
         ]
       }
 

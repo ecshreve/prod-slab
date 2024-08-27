@@ -5,10 +5,14 @@ job "kavita" {
   group "kavita" {
     count = 1
 
+    constraint {
+      attribute = "${node.unique.name}"
+      operator  = "regexp"
+      value     = "^localbox$"
+    }
+
     network {
-        port "kavita" {
-            static = 5000
-        }
+        port "kavita" { to = 5000 }
     }
 
     volume "appdata" {
