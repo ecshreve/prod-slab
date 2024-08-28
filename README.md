@@ -4,10 +4,78 @@ Compose files for deploying applications in my homelab.
 
 ## Summary
 
-Preparing my setup for an upcoming move, experimenting with configurations for [Homebox](#homebox), [Coder](#coder), and [Traefik](#traefik).
+This repository contains the configuration and deployment setup for a cloud infrastructure using Terraform, Ansible, and various platforms and services like DigitalOcean, Multipass,Tailscale, Consul, Nomad, and Docker.
 
 ---
 
+## Table of Contents
+
+- [Core Tools](#core-tools)
+- [Terraform Configuration](#terraform-configuration)
+- [User Data Templates](#user-data-templates)
+- [Ansible Roles and Tasks](#ansible-roles-and-tasks)
+- [Environment Variables](#environment-variables)
+- [Docker](#docker)
+- [Usage](#usage)
+
+## Core Tools
+
+- [Docker](https://www.docker.com/)
+- [Terraform](https://www.terraform.io/downloads.html)
+- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+- [Multipass](https://multipass.run/)
+- [DigitalOcean](https://www.digitalocean.com/)
+- [Tailscale](https://tailscale.com/)
+
+
+## Terraform Configuration
+
+The Terraform configuration is divided into two main parts:
+
+1. **Main Configuration (`terraform/devsync/main.tf`):**
+    - Sets up the Terraform project, required providers, and variables.
+    - Provisions DigitalOcean droplets and Multipass instances.
+    - Goal is to create a VM on Multipass locally and a matching one in DigitalOcean
+
+### User Data Templates
+
+Cloud-init configurations are defined in `userdata.tpl` files for setting up a user, installing tailscale, and connecting to the tailnet on the provisioned instances.
+
+## Ansible Roles and Tasks
+
+Ansible is used to configure the provisioned instances. The roles include:
+
+1. **General Setup (`ansible/roles/general`):**
+    - Installs general packages.
+    - Creates appdata directory in user home to persist application data.
+    - Modifies sysctl entry for `net.ipv4.ip_nonlocal_bind` allowing the process to bind to an IP address that is not local or not yet assigned to the host.
+    - Modifies sysctl entry for `net.ipv4.conf.all.forwarding` to enable IP forwarding, allowing the host to route packets between different networks.
+    
+2. **Docker Setup (`ansible/roles/docker`):**
+    - Ensures Docker is installed and configured.
+
+3. **HashiCorp Setup (`ansible/roles/hashicorp`):**
+    - Installs dependencies and adds HashiCorp's apt repository.
+
+4. **Consul Setup (`ansible/roles/consul`):**
+    - Installs and configures Consul, including service files and handlers.
+
+5. **Nomad Setup (`ansible/roles/nomad`):**
+    - Installs and configures Nomad, including service files and handlers.
+
+6. **Droplet Tasks (`ansible/roles/droplet`):**
+    - Ensures directories exist, mounts volumes, and configures fstab for persistence.
+
+## Environment Variables
+
+Terraform uses the following environment variables:
+
+- `TF_VAR_do_token`: DigitalOcean API token
+- `TF_VAR_ts_token`: Tailscale API token
+- `TF_VAR_ssh_pub_key`: Public SSH key for the created user
+
+---
+# These apps are being replaced by nomad jobs, but the general idea still applies.
 ### _Apps_
 - [Homepage](#homepage): Dashboard
 - [Homebox](#homebox): Track the things
